@@ -1,46 +1,81 @@
-import { View, Text, Image} from "react-native";
-import { Tabs, Redirect } from "expo-router";
+import React from 'react';
+import { View, Text, Image } from 'react-native';
+import { Tabs } from 'expo-router';
 
-import { icons } from "../constants";
+import icons from '../../constants/icons';
 
 const TabIcon = ({ icon, color, name, focused }: { icon: any, color: string, name: string, focused: boolean }) => {
   return (
-    <View>
+    <View className="items-center justify-center gap-1">
       <Image
-       source={icon}
-       resizeMode="contain"
-       tintColor={color}
-       className="w-6 h-6"
+        source={icon}
+        resizeMode="contain"
+        style={{ tintColor: color }}
+        className="w-6 h-6"
       />
       <Text
-        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
+        className={`${focused ? "font-semibold" : "font-regular"} text-xs`}
         style={{ color: color }}
       >
         {name}
       </Text>
     </View>
   );
-}
+};
 
 const TabsLayout = () => {
   return (
-    <>
-      <Tabs>
-        <Tabs.Screen name="home" options={{
-            title: 'Home',
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon 
-               icon={icons.home}
-               color={color}
-               name="Home"
-               focused={focused}
-              />
-                ),
-        }} />
-         
-      </Tabs>
-    </>
+    <Tabs screenOptions={{ 
+      tabBarShowLabel: false,
+    }}>
+      <Tabs.Screen 
+        name="home" 
+        options={{
+          title: 'Home',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.home}
+              color={color}
+              name="Home"
+              focused={focused}
+            />
+          ),
+        }} 
+      />
+      
+      <Tabs.Screen 
+        name="sst-map" 
+        options={{
+          title: 'Sea Surface Temperature Map',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.map}
+              color={color}
+              name="SST Map"
+              focused={focused}
+            />
+          ),
+        }} 
+      />
+      <Tabs.Screen 
+        name="sonar" 
+        options={{
+          title: 'Sonar Data',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.radar}
+              color={color}
+              name="Sonar Data"
+              focused={focused}
+            />
+          ),
+        }} 
+      />
+    </Tabs>
   );
 };
+
 export default TabsLayout;

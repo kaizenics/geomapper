@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 
-const Home = () => {
+export const Sonar = () => {
   return (
     <View>
-      <Text>Home Layout</Text>
+      <Text>Sonar</Text>
     </View>
   );
 };
 
-export default Home;
+export default Sonar;
