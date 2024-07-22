@@ -23,8 +23,8 @@ const GoogleButton: React.FC<GoogleButtonProps> = ({
   return (
     <TouchableOpacity className="bg-white rounded-full py-3 px-16 mb-2">
       <View className="flex-row items-center space-x-3">
-        <AntDesign name="google" size={24} color="#167cfa" />
-        <Text className="text-[#167cfa] text-lg font-semibold">{title}</Text>
+        <AntDesign name="google" size={24} color="#0e4483" />
+        <Text className="text-[#0e4483] text-lg font-semibold">{title}</Text>
       </View>
     </TouchableOpacity>
   );

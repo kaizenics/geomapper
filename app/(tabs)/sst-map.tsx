@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 const SSTMap = () => {
     return (
         <View>
-        <Text>Home Layout</Text>
+        <Text>SST Map</Text>
         </View>
     );
 }
