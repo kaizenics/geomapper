@@ -1,1 +1,2 @@
-![image](https://github.com/user-attachments/assets/7e91fac2-bd7b-457d-bd60-bec4772aa626)
+
+![geomapper-icon](https://github.com/user-attachments/assets/97c92fb0-e3b5-4041-840b-668776e6d1c1)
