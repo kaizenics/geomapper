@@ -1,21 +1,27 @@
-import { Text, View, ScrollView } from "react-native";
-import { Link } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
+import React from 'react';
+import { Text, View, ScrollView, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomButton from '../components/CustomButton'; 
+import images from '../constants/images';
 
 export default function Index() {
   return (
-    <LinearGradient colors={['#38bdf8', '#06b6d4', '#075985']}
-    style={{ flex: 1 }}>
-      <SafeAreaView className="bg-gradient-to-r from-slate-600 to-cyan-500 h-full">
-        <ScrollView contentContainerStyle={{ height: "100%" }}>
-          <View className="w-full justify-center items-center h-full px-4">
-            <Text className="text-white text-2xl font-bold">
-              Welcome to My App
-            </Text>
+    <SafeAreaView className="bg-[#167cfa] h-full">
+      <ScrollView contentContainerStyle={{ height: '100%' }}>
+        <View className="w-full justify-center h-full items-center px-2">
+          <Image
+            source={images.logo}
+            className="w-[190px] h-[100px]"
+            resizeMode="contain"
+          />
+          <Text className="text-white text-center text-lg font-regular mt-4 mx-10 leading-5">
+            Find fishing spots and local info trusted by millions of anglers.
+          </Text>
+          <View className="mt-5 space-y-4">
+            <CustomButton title="Get Started" onPress={() => { console.log('Button Pressed'); }} />
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </LinearGradient>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
