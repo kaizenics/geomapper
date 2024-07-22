@@ -1,11 +1,19 @@
-import { View, Text } from "react-native";
+import { Stack } from "expo-router";
 
-const AuthLayout = () => {
+export default function RootLayout() {
   return (
-    <View>
-      <Text>Auth Layout</Text>
-    </View>
+    <Stack>
+      <Stack.Screen
+        name="log-in"
+        options={{
+          title: "Log in", 
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle: { color: "#FFF" },
+          headerTintColor: "#FFF",
+         }}
+      />
+      <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+    </Stack>
   );
 }
-
-export default AuthLayout;

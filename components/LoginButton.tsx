@@ -8,13 +8,13 @@ import {
 import { ViewStyle } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
-interface CustomButtonProps extends TouchableOpacityProps {
+interface LoginButtonProps extends TouchableOpacityProps {
   title: string;
   buttonStyle?: ViewStyle;
   textStyle?: ViewStyle;
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({
+const LoginButton: React.FC<LoginButtonProps> = ({
   title,
   buttonStyle,
   textStyle,
@@ -30,4 +30,4 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   );
 };
 
-export default CustomButton;
+export default LoginButton;
