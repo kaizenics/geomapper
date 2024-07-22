@@ -1,2 +1,3 @@
 
-![geomapper-logo](https://github.com/user-attachments/assets/db53583e-cac6-4275-ae83-3bf6ea8096b2)
+
+![GeoMapper](https://github.com/user-attachments/assets/98b6fb50-3eb4-4616-b32e-03058c2720ae)
