@@ -4,11 +4,12 @@ import EmailButton from "../../components/Buttons/EmailButton";
 import GoogleButton from "../../components/Buttons/GoogleButton";
 import { useRouter } from "expo-router";
 
+
 export default function LogIn() {
   const router = useRouter();
 
   return (
-    <View className="flex-1 p-6 pt-24 bg-[#167cfa]">
+    <View className="flex-1 p-6 pt-24 bg-[#0e4483]">
       <Text className="text-4xl justify-start text-white font-pbold mb-5">
         Welcome Back!
       </Text>

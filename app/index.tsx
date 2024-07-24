@@ -10,7 +10,7 @@ export default function Index() {
   const router = useRouter();
 
   return (
-    <SafeAreaView className="bg-[#167cfa] h-full">
+    <SafeAreaView className="bg-[#0e4483] h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="w-full justify-center h-full items-center px-2">
           <Image

@@ -3,16 +3,17 @@ module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      
       fontFamily: {
-        pthin: ["Kanit-Thin", "sans-serif"],
-        pextralight: ["Kanit-ExtraLight", "sans-serif"],
-        plight: ["Kanit-Light", "sans-serif"],
-        pregular: ["Kanit-Regular", "sans-serif"],
-        pmedium: ["Kanit-Medium", "sans-serif"],
-        psemibold: ["Kanit-SemiBold", "sans-serif"],
-        pbold: ["Kanit-Bold", "sans-serif"],
-        pextrabold: ["Kanit-ExtraBold", "sans-serif"],
-        pblack: ["Kanit-Black", "sans-serif"],
+        pthin: ["Poppins-Thin", "sans-serif"],
+        pextralight: ["Poppins-ExtraLight", "sans-serif"],
+        plight: ["Poppins-Light", "sans-serif"],
+        pregular: ["Poppins-Regular", "sans-serif"],
+        pmedium: ["Poppins-Medium", "sans-serif"],
+        psemibold: ["Poppins-SemiBold", "sans-serif"],
+        pbold: ["Poppins-Bold", "sans-serif"],
+        pextrabold: ["Poppins-ExtraBold", "sans-serif"],
+        pblack: ["Poppins-Black", "sans-serif"],
       },
     },
   },
