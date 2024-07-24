@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Tabs } from 'expo-router';
-
 import icons from '../../constants/icons';
 
 const TabIcon = ({ icon, color, name, focused }: { icon: any, color: string, name: string, focused: boolean }) => {
@@ -23,6 +22,19 @@ const TabIcon = ({ icon, color, name, focused }: { icon: any, color: string, nam
   );
 };
 
+const HeaderIcon = ({ icon, onPress }: { icon: any, onPress: () => void }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Image
+        source={icon}
+        resizeMode="contain"
+        className="w-7 h-7 ml-4"
+        style={{ tintColor: 'black' }}
+      />
+    </TouchableOpacity>
+  );
+};
+
 const TabsLayout = () => {
   return (
     <Tabs screenOptions={{ 
@@ -38,8 +50,16 @@ const TabsLayout = () => {
       <Tabs.Screen 
         name="home" 
         options={{
-          title: 'Home',
-          headerShown: false,
+          title: 'Dashboard',
+          headerShown: true,
+          headerLeft: () => (
+            <HeaderIcon 
+              icon={icons.menu}
+              onPress={() => console.log('Settings Pressed')}
+            />
+            
+          ),
+          
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               icon={icons.home}
@@ -50,12 +70,17 @@ const TabsLayout = () => {
           ),
         }} 
       />
-      
       <Tabs.Screen 
         name="sst-map" 
         options={{
           title: 'Sea Surface Temperature Map',
-          headerShown: false,
+          headerShown: true,
+          headerRight: () => (
+            <HeaderIcon 
+              icon={icons.option}
+              onPress={() => console.log('Settings Pressed')}
+            />
+          ),
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               icon={icons.map}
@@ -70,7 +95,13 @@ const TabsLayout = () => {
         name="sonar" 
         options={{
           title: 'Sonar Data',
-          headerShown: false,
+          headerShown: true,
+          headerRight: () => (
+            <HeaderIcon 
+              icon={icons.option}
+              onPress={() => console.log('Settings Pressed')}
+            />
+          ),
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               icon={icons.radar}
@@ -80,6 +111,27 @@ const TabsLayout = () => {
             />
           ),
         }} 
+      />
+      <Tabs.Screen 
+        name="profile" 
+        options={{
+          title: 'Profile',
+          headerShown: true,
+          headerRight: () => (
+            <HeaderIcon 
+              icon={icons.option}
+              onPress={() => console.log('Settings Pressed')}
+            />
+          ),
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.profile}
+              color={color}
+              name="Profile"
+              focused={focused}
+            />
+          ),
+        }}
       />
     </Tabs>
   );

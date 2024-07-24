@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, Text } from 'react-native';
 
 interface FormFieldProps {
@@ -10,6 +10,8 @@ interface FormFieldProps {
 }
 
 const FormField: React.FC<FormFieldProps> = ({ label, value, placeholder, secureTextEntry, onChangeText }) => {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <View className="mb-4 w-full px-4">
       <Text className="text-white text-md font-semibold mb-1">{label}</Text>
@@ -19,7 +21,9 @@ const FormField: React.FC<FormFieldProps> = ({ label, value, placeholder, secure
         placeholderTextColor="#ddd"
         secureTextEntry={secureTextEntry}
         onChangeText={onChangeText}
-        className="bg-white text-black rounded-lg py-3 px-4"
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        className={`bg-white text-black rounded-lg py-3 px-4 ${isFocused ? 'border border-[#0e4483]' : 'border border-transparent'}`}
       />
     </View>
   );

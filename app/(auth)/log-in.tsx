@@ -9,7 +9,7 @@ export default function LogIn() {
 
   return (
     <View className="flex-1 p-6 pt-24 bg-[#167cfa]">
-      <Text className="text-4xl justify-start text-white font-bold mb-5">
+      <Text className="text-4xl justify-start text-white font-pbold mb-5">
         Welcome Back!
       </Text>
 

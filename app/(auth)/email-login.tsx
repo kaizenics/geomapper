@@ -8,26 +8,18 @@ import images from "../../constants/images";
 const EmailLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
   const router = useRouter();
 
   const handleLogin = () => {
-    console.log("First Name: ", email);
-    console.log("Last Name: ")
     console.log("Email:", email);
     console.log("Password:", password);
+
+    router.push("/home");
   };
 
   return (
     <View className="flex-1 pt-16 items-center bg-[#167cfa] ">
       
-      <FormField
-        label="First Name"
-        value={email}
-        placeholder="Enter your email address"
-        onChangeText={setEmail}
-      />
       <FormField
         label="Email Address"
         value={email}

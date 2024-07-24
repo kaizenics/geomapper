@@ -1,46 +1,41 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import FormField from "../../components/Forms/FormField";
 import CustomButton from "../../components/Buttons/CustomButton";
-import images from "../../constants/images";
 
 const EmailSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState(""); 
   const [lastName, setLastName] = useState("");
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
   const router = useRouter();
 
   const handleSignup = () => {
     console.log("First Name:", firstName);
-    console.log("Last Name:", password);
+    console.log("Last Name:", lastName);
     console.log("Email:", email);
     console.log("Password:", password);
   };
 
   return (
-    <View className="flex-1 pt-16 items-center bg-[#167cfa] ">
-     
+    <View className="flex-1 pt-16 items-center bg-[#167cfa]">
       <FormField
         label="First Name"
-        value={email}
+        value={firstName}
         placeholder="Enter your first name"
         onChangeText={setFirstName}
       />
       <FormField
         label="Last Name"
-        value={email}
+        value={lastName}
         placeholder="Enter your last name"
         onChangeText={setLastName}
       />
       <FormField
         label="Email"
-        value={password}
+        value={email}
         placeholder="Enter your email address"
-        secureTextEntry
         onChangeText={setEmail}
       />
       <FormField
