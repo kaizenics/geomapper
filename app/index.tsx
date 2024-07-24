@@ -1,8 +1,8 @@
 import React from "react";
 import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomButton from "../components/CustomButton";
-import GoogleButton from "../components/GoogleButton";
+import EmailButton from "../components/Buttons/EmailButton";
+import GoogleButton from "../components/Buttons/GoogleButton";
 import images from "../constants/images";
 import { useRouter } from "expo-router";
 
@@ -19,20 +19,19 @@ export default function Index() {
             resizeMode="contain"
           />
           <Text className="text-white text-center text-lg font-regular mt-4 mx-10 leading-5">
-            Find fishing spots and track marine fishes powered by SST and
-            Sonar.
+            Find fishing spots and track marine fishes powered by SST and Sonar.
           </Text>
-          <View className="mt-10 space-y-4">
+          <View className="mt-10">
             <GoogleButton
               title="Continue with Google"
               onPress={() => {
                 console.log("Button Pressed");
               }}
             />
-            <CustomButton
+            <EmailButton
               title="Continue with Email"
               onPress={() => {
-                console.log("Button Pressed");
+                router.push("/email-signup");
               }}
             />
           </View>
@@ -46,9 +45,15 @@ export default function Index() {
               </Text>
             </TouchableOpacity>
           </View>
-          <Text className="text-white text-center text-md font-regular mt-20 mx-10 leading-5">
-            By continuing, you agree to our Terms of Service and Privacy Policy
-          </Text>
+
+          <View className="flex-row items-center justify-center mt-10">
+            <Text className="text-white text-center text-md font-regular mt-20 mx-10 leading-5">
+              By continuing, you agree to our{" "}
+              <Text style={{ fontWeight: 'bold' }}>Terms of Service</Text>{" "}
+              and{" "}
+              <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -6,7 +6,6 @@ import {
   View,
 } from "react-native";
 import { ViewStyle } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 
 interface LoginButtonProps extends TouchableOpacityProps {
   title: string;
@@ -21,10 +20,9 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   ...props
 }) => {
   return (
-    <TouchableOpacity className="bg-white rounded-full py-3 px-16 mb-2">
+    <TouchableOpacity {...props} className="bg-[#0e4483] rounded-full py-3 px-36 mb-2">
       <View className="flex-row items-center space-x-3">
-        <MaterialIcons name="email" size={24} color="#0e4483" />
-        <Text className="text-[#0e4483] text-lg font-semibold">{title}</Text>
+        <Text className="text-white text-lg font-semibold">{title}</Text>
       </View>
     </TouchableOpacity>
   );
