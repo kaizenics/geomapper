@@ -6,14 +6,43 @@ export default function RootLayout() {
       <Stack.Screen
         name="log-in"
         options={{
-          title: "Log in", 
+          title: "Log in",
           headerShown: true,
           headerTransparent: true,
           headerTitleStyle: { color: "#FFF" },
           headerTintColor: "#FFF",
-         }}
+        }}
       />
-      <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="sign-up"
+        options={{
+          title: "Sign up",
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle: { color: "#FFF" },
+          headerTintColor: "#FFF",
+        }}
+      />
+      <Stack.Screen
+        name="email-login"
+        options={{
+          title: "Log in with Email",
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle: { color: "#FFF" },
+          headerTintColor: "#FFF",
+        }}
+      />
+      <Stack.Screen
+        name="email-signup"
+        options={{
+          title: "Sign up with Email",
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle: { color: "#FFF" },
+          headerTintColor: "#FFF",
+        }}
+      />
     </Stack>
   );
 }

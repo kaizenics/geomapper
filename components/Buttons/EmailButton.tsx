@@ -6,28 +6,28 @@ import {
   View,
 } from "react-native";
 import { ViewStyle } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 
-interface GoogleButtonProps extends TouchableOpacityProps {
+interface EmailButtonProps extends TouchableOpacityProps {
   title: string;
   buttonStyle?: ViewStyle;
   textStyle?: ViewStyle;
 }
 
-const GoogleButton: React.FC<GoogleButtonProps> = ({
+const EmailButton: React.FC<EmailButtonProps> = ({
   title,
   buttonStyle,
   textStyle,
   ...props
 }) => {
   return (
-    <TouchableOpacity className="bg-white rounded-full py-3 px-16 mb-2">
+    <TouchableOpacity {...props} className="bg-white rounded-full py-3 px-16 mb-2">
       <View className="flex-row items-center space-x-3">
-        <AntDesign name="google" size={24} color="#0e4483" />
+        <MaterialIcons name="email" size={24} color="#0e4483" />
         <Text className="text-[#0e4483] text-lg font-semibold">{title}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default GoogleButton;
+export default EmailButton;
