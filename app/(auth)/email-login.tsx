@@ -18,7 +18,7 @@ const EmailLogin = () => {
   };
 
   return (
-    <View className="flex-1 pt-16 items-center bg-[#167cfa] ">
+    <View className="flex-1 pt-16 items-center bg-[#0e4483] ">
       
       <FormField
         label="Email Address"
