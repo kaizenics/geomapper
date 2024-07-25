@@ -8,7 +8,12 @@ import menu from '../assets/icons/menu.png';
 import heavyRain from '../assets/icons/heavy-rain.png';
 import rainy from '../assets/icons/rainy-day.png';
 import sunny from '../assets/icons/sun.png';
-import windy from '../assets/icons/leaves.png';
+import windy from '../assets/icons/windy.png';
+import wind from '../assets/icons/wind.png';
+import pointer from '../assets/icons/pointer.png';
+import cloud from '../assets/icons/cloud.png';
+import partlyCloudy from '../assets/icons/cloudy-day.png';
+import foggy from '../assets/icons/foggy.png';
 
 export default {
     map,
@@ -22,4 +27,9 @@ export default {
     rainy,
     sunny,
     windy,
+    wind,
+    pointer,
+    cloud,
+    partlyCloudy,
+    foggy,
 }
