@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, ScrollView, Text, Image } from "react-native";
+import { SafeAreaView, View, ScrollView, Text, Image, RefreshControl } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CustomLineChart from "../../components/DailyWaveChart";
 import icons from "../../constants/icons";
@@ -15,42 +15,56 @@ const Home = () => {
   const [dailyTemperatures, setDailyTemperatures] = useState<number[]>([]);
   const [dailyWindSpeeds, setDailyWindSpeeds] = useState<number[]>([]);
   const [dailyWindDirections, setDailyWindDirections] = useState<number[]>([]);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const getWeatherData = async () => {
+    try {
+      const weatherResponse = await fetch(
+        "https://api.open-meteo.com/v1/forecast?latitude=7.0731&longitude=125.6128&current=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,relative_humidity_2m&daily=weather_code,temperature_2m_max,wind_speed_10m_max,wind_direction_10m_dominant"
+      );
+      const weatherData = await weatherResponse.json();
+
+      const {
+        temperature_2m,
+        wind_speed_10m,
+        wind_direction_10m,
+        weather_code,
+      } = weatherData.current;
+      const heights = weatherData.daily.temperature_2m_max;
+      const times = weatherData.daily.time;
+      const temperatures = weatherData.daily.temperature_2m_max;
+      const dailyWeatherCodes = weatherData.daily.weather_code;
+      const dailyWindSpeeds = weatherData.daily.wind_speed_10m_max || [];
+      const dailyWindDirections =
+        weatherData.daily.wind_direction_10m_dominant || [];
+
+      setTemperature(temperature_2m);
+      setWindSpeed(wind_speed_10m);
+      setWindDirection(wind_direction_10m);
+      setWeatherCodes(dailyWeatherCodes);
+      setDailyWaveHeights(heights);
+      setDailyLabels(times);
+      setDailyTemperatures(temperatures);
+      setDailyWindSpeeds(dailyWindSpeeds.slice(0, 4));
+      setDailyWindDirections(dailyWindDirections.slice(0, 4));
+
+      setLoading(false);
+      setRefreshing(false);
+    } catch (error) {
+      setLoading(false);
+      setRefreshing(false);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const getWeatherData = async () => {
-      try {
-        const weatherResponse = await fetch(
-          "https://api.open-meteo.com/v1/forecast?latitude=7.0731&longitude=125.6128&current=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,relative_humidity_2m&daily=weather_code,temperature_2m_max,wind_speed_10m_max,wind_direction_10m_dominant"
-        );
-        const weatherData = await weatherResponse.json();
-
-        const { temperature_2m, wind_speed_10m, wind_direction_10m, weather_code } = weatherData.current;
-        const heights = weatherData.daily.temperature_2m_max;
-        const times = weatherData.daily.time;
-        const temperatures = weatherData.daily.temperature_2m_max;
-        const dailyWeatherCodes = weatherData.daily.weather_code;
-        const dailyWindSpeeds = weatherData.daily.wind_speed_10m_max || [];
-        const dailyWindDirections = weatherData.daily.wind_direction_10m_dominant || [];
-
-        setTemperature(temperature_2m);
-        setWindSpeed(wind_speed_10m);
-        setWindDirection(wind_direction_10m);
-        setWeatherCodes(dailyWeatherCodes);
-        setDailyWaveHeights(heights);
-        setDailyLabels(times);
-        setDailyTemperatures(temperatures);
-        setDailyWindSpeeds(dailyWindSpeeds.slice(0, 4));
-        setDailyWindDirections(dailyWindDirections.slice(0, 4)); 
-
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        console.error(error);
-      }
-    };
-
     getWeatherData();
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getWeatherData();
+  };
 
   const weatherIcons: { [key: number]: any; default: any } = {
     0: icons.sunny,
@@ -135,16 +149,23 @@ const Home = () => {
   const calculateRotation = (direction: number) => {
     // Rotation angle calculation based on wind direction
     // 0° is North, 90° is East, 180° is South, 270° is West
-    return direction - 180; 
+    return direction - 180;
   };
 
   return (
     <SafeAreaView className="bg-white flex-1">
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         <View className="w-full">
-          <Text className="text-black text-2xl font-semibold pt-4">Hello Nicose John!</Text>
+          <Text className="text-black text-2xl font-psemibold pt-4">
+            Hello Nicose John!
+          </Text>
           <Text className="text-black text-lg font-regular ">
-            {loading ? "Loading..." : getCustomWeatherPhrase(getWeatherDescription(weatherCodes[0]))}
+            {loading
+              ? "Loading..."
+              : getCustomWeatherPhrase(getWeatherDescription(weatherCodes[0]))}
           </Text>
 
           {/* Weather Forecast */}
@@ -158,20 +179,34 @@ const Home = () => {
             <View className="flex flex-row justify-between">
               <View className="flex-col justify-between">
                 <Text className="text-white text-lg mb-2 font-medium">
-                  {loading ? "Loading..." : getWeatherDescription(weatherCodes[0])}
+                  {loading
+                    ? "Loading..."
+                    : getWeatherDescription(weatherCodes[0])}
                 </Text>
                 <Text className="text-white text-5xl font-semibold">
-                  {loading ? "Loading..." : temperature !== null ? `${temperature}°` : "Data Unavailable"}
+                  {loading
+                    ? "Loading..."
+                    : temperature !== null
+                    ? `${temperature}°`
+                    : "Data Unavailable"}
                 </Text>
-                <Text className="text-white text-lg font-semibold">{nextDays[0]}</Text>
-                <Text className="text-white text-md mb-2 font-regular">{new Date().toLocaleDateString()}</Text>
+                <Text className="text-white text-lg font-semibold">
+                  {nextDays[0]}
+                </Text>
+                <Text className="text-white text-md mb-2 font-regular">
+                  {new Date().toLocaleDateString()}
+                </Text>
               </View>
               <View className="flex-row justify-between mt-2 space-x-4">
                 {nextDays.slice(1).map((day, index) => (
                   <View key={index} className="items-center">
                     <Text className="text-white font-semibold mb-5">{day}</Text>
                     <Image
-                      source={loading ? icons.cloud : getWeatherIcon(weatherCodes[index + 1])}
+                      source={
+                        loading
+                          ? icons.cloud
+                          : getWeatherIcon(weatherCodes[index + 1])
+                      }
                       className="w-7 h-7"
                       resizeMode="contain"
                     />
@@ -190,16 +225,25 @@ const Home = () => {
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             locations={[0, 1]}
-            style={{ borderRadius: 10, paddingTop: 16, paddingBottom: 16, paddingLeft: 10, paddingRight: 10, marginTop: 6 }}
+            style={{
+              borderRadius: 10,
+              paddingTop: 16,
+              paddingBottom: 13,
+              paddingLeft: 10,
+              paddingRight: 10,
+              marginTop: 6,
+            }}
           >
             <View className="flex flex-row justify-between">
               <View className="flex-row items-center space-x-2.5">
-                <Image
-                  source={icons.wind}
-                  className="w-12 h-12"
-                  resizeMode="contain"
-                  style={{ tintColor: 'white' }}
-                />
+                <View className="ml-2 mr-3">
+                  <Image
+                    source={icons.wind}
+                    className="w-12 h-12"
+                    resizeMode="contain"
+                    style={{ tintColor: "white" }}
+                  />
+                </View>
                 {nextDays.slice(1, 5).map((day, index) => (
                   <View key={index} className="flex-col items-center">
                     <Image
@@ -207,15 +251,25 @@ const Home = () => {
                       className="w-6 h-6"
                       resizeMode="contain"
                       style={{
-                        tintColor: 'white',
-                        transform: [{ rotate: `${calculateRotation(dailyWindDirections[index])}deg` }]
+                        tintColor: "white",
+                        transform: [
+                          {
+                            rotate: `${calculateRotation(
+                              dailyWindDirections[index]
+                            )}deg`,
+                          },
+                        ],
                       }}
                     />
                     <Text className="text-white text-md mt-2 font-medium">
-                      {loading ? "Loading..." : dailyWindSpeeds[index] || "N/A"} km/h
+                      {loading ? "Loading..." : dailyWindSpeeds[index] || "N/A"}{" "}
+                      km/h
                     </Text>
                     <Text className="text-white text-md mb-2 font-medium">
-                      {loading ? "Loading..." : dailyWindDirections[index] || "N/A"}°
+                      {loading
+                        ? "Loading..."
+                        : dailyWindDirections[index] || "N/A"}
+                      °
                     </Text>
                   </View>
                 ))}
@@ -223,13 +277,18 @@ const Home = () => {
             </View>
           </LinearGradient>
 
-          {/* Line Chart */}
+          {/* Wave Height Chart */}
           <View className="mt-6">
-            <Text className="text-black text-lg font-semibold">Wave Heights (Davao City)</Text>
+            <Text className="text-black text-lg font-semibold">
+              Wave Heights (Davao City)
+            </Text>
             {loading ? (
               <Text>Loading...</Text>
             ) : (
-              <CustomLineChart dailyWaveHeights={dailyWaveHeights} dailyLabels={nextDays} />
+              <CustomLineChart
+                dailyWaveHeights={dailyWaveHeights}
+                dailyLabels={nextDays}
+              />
             )}
           </View>
         </View>

@@ -14,6 +14,10 @@ import pointer from '../assets/icons/pointer.png';
 import cloud from '../assets/icons/cloud.png';
 import partlyCloudy from '../assets/icons/cloudy-day.png';
 import foggy from '../assets/icons/foggy.png';
+import user from '../assets/icons/profile-user.png';
+import fish from '../assets/icons/fish.png';
+import down from '../assets/icons/down.png';
+import plus from '../assets/icons/plus.png';
 
 export default {
     map,
@@ -32,4 +36,8 @@ export default {
     cloud,
     partlyCloudy,
     foggy,
+    user,
+    fish,
+    down,
+    plus,
 }
