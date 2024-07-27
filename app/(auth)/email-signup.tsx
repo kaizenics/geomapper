@@ -1,21 +1,26 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
+import { useAuth } from "../../hooks/useAuth";
 import FormField from "../../components/Forms/FormField";
 import CustomButton from "../../components/Buttons/CustomButton";
 
 const EmailSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState(""); 
+  const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const { signUpWithEmailAndPassword} = useAuth();
   const router = useRouter();
 
-  const handleSignup = () => {
-    console.log("First Name:", firstName);
-    console.log("Last Name:", lastName);
-    console.log("Email:", email);
-    console.log("Password:", password);
+  const handleSignup = async () => {
+    try {
+      await signUpWithEmailAndPassword(email, password);
+      Alert.alert("Success", "User account created & signed in!");
+      router.push("/home");
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    }
   };
 
   return (
@@ -49,12 +54,10 @@ const EmailSignup = () => {
 
       <View className="flex-row items-center justify-center mt-5">
         <Text className="text-white text-center text-md">
-          Did you forget your password?{" "}
+          Already have an account?{" "}
         </Text>
-        <TouchableOpacity onPress={() => router.push("/reset-password")}>
-          <Text className="font-bold text-white text-md">
-            Reset Password
-          </Text>
+        <TouchableOpacity onPress={() => router.push("/login")}>
+          <Text className="font-bold text-white text-md">Log In</Text>
         </TouchableOpacity>
       </View>
     </View>
