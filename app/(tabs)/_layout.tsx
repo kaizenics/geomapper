@@ -75,9 +75,9 @@ const TabsLayout = () => {
         options={{
           title: 'Sea Surface Temperature Map',
           headerShown: true,
-          headerRight: () => (
+          headerLeft: () => (
             <HeaderIcon 
-              icon={icons.option}
+              icon={icons.menu}
               onPress={() => console.log('Settings Pressed')}
             />
           ),
@@ -96,9 +96,9 @@ const TabsLayout = () => {
         options={{
           title: 'Sonar Data',
           headerShown: true,
-          headerRight: () => (
+          headerLeft: () => (
             <HeaderIcon 
-              icon={icons.option}
+              icon={icons.menu}
               onPress={() => console.log('Settings Pressed')}
             />
           ),
@@ -117,23 +117,26 @@ const TabsLayout = () => {
         options={{
           title: 'Profile',
           headerShown: true,
-          headerRight: () => (
+          headerLeft: () => (
             <HeaderIcon 
-              icon={icons.option}
+              icon={icons.menu}
               onPress={() => console.log('Settings Pressed')}
             />
+            
           ),
+          
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
-              icon={icons.profile}
+              icon={icons.home}
               color={color}
-              name="Profile"
+              name="Home"
               focused={focused}
             />
           ),
-        }}
+        }} 
       />
     </Tabs>
+   
   );
 };
 
