@@ -1,25 +1,28 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
+import { useAuth } from "../../hooks/useAuth";
 import FormField from "../../components/Forms/FormField";
 import CustomButton from "../../components/Buttons/CustomButton";
-import images from "../../constants/images";
 
 const EmailLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { loginWithEmailAndPassword } = useAuth();
   const router = useRouter();
 
-  const handleLogin = () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
-
-    router.push("/home");
+  const handleLogin = async () => {
+    try {
+      await loginWithEmailAndPassword(email, password);
+      Alert.alert("Success", "User logged in successfully!");
+      router.push("/home");
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    }
   };
 
   return (
-    <View className="flex-1 pt-16 items-center bg-[#0e4483] ">
-      
+    <View className="flex-1 pt-16 items-center bg-[#0e4483]">
       <FormField
         label="Email Address"
         value={email}
@@ -40,9 +43,7 @@ const EmailLogin = () => {
           Did you forget your password?{" "}
         </Text>
         <TouchableOpacity onPress={() => router.push("/reset-password")}>
-          <Text className="font-bold text-white text-md">
-            Reset Password
-          </Text>
+          <Text className="font-bold text-white text-md">Reset Password</Text>
         </TouchableOpacity>
       </View>
     </View>

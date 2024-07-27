@@ -5,9 +5,22 @@ import EmailButton from "../components/Buttons/EmailButton";
 import GoogleButton from "../components/Buttons/GoogleButton";
 import images from "../constants/images";
 import { useRouter } from "expo-router";
+import { useAuth } from "../hooks/useAuth";
+import * as WebBrowser from 'expo-web-browser';
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
   const router = useRouter();
+  const { user, signInWithGoogle } = useAuth();
+  
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-[#0e4483] h-full">
@@ -24,9 +37,7 @@ export default function Index() {
           <View className="mt-10">
             <GoogleButton
               title="Continue with Google"
-              onPress={() => {
-                console.log("Button Pressed");
-              }}
+              onPress={handleGoogleSignIn}
             />
             <EmailButton
               title="Continue with Email"
