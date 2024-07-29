@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { useAuth } from '../../hooks/useAuth'; // Import the useAuth hook
+import { useAuth } from '../../hooks/useAuth'; 
 import { useRouter } from 'expo-router';
 
 export default function Settings() {
   const router = useRouter();
-  const { signOut } = useAuth(); // Destructure the signOut function from useAuth
+  const { signOut } = useAuth(); 
 
   const handleSignOut = () => {
     Alert.alert(
@@ -73,7 +73,7 @@ export default function Settings() {
         </TouchableOpacity>
         <TouchableOpacity 
           className="flex-row items-center p-2 bg-gray-100 rounded-b-lg" 
-          onPress={handleSignOut} // Add onPress handler to the Logout button
+          onPress={handleSignOut} 
         >
           <AntDesign name="logout" size={24} color="red" />
           <Text className="ml-3 text-base text-red-600">Logout</Text>

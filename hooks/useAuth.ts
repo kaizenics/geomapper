@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { auth, db } from '../config/firebaseConfig'; // Import Firestore configuration
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword, signInWithCredential, onAuthStateChanged, GoogleAuthProvider, User } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore'; // Import Firestore methods
+import { doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
@@ -20,7 +20,7 @@ export const useAuth = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-       
+        // Fetch additional user data from Firestore
         const userDoc = doc(db, "users", user.email || "");
         const userSnapshot = await getDoc(userDoc);
         if (userSnapshot.exists()) {
@@ -44,19 +44,8 @@ export const useAuth = () => {
     }
   }, [response]);
 
-  const signUpWithEmailAndPassword = async (email: string, password: string, firstName: string, lastName: string) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      
-      // Add user details to Firestore
-      const userRef = doc(db, "users", email); // or use user.uid if available
-      await setDoc(userRef, { firstName, lastName, email });
-
-      return user; // Return the user object if needed
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+  const signUpWithEmailAndPassword = async (email: string, password: string) => {
+    await createUserWithEmailAndPassword(auth, email, password);
   };
 
   const loginWithEmailAndPassword = async (email: string, password: string) => {
