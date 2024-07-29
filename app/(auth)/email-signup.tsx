@@ -10,12 +10,12 @@ const EmailSignup = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const { signUpWithEmailAndPassword} = useAuth();
+  const { signUpWithEmailAndPassword } = useAuth();
   const router = useRouter();
 
   const handleSignup = async () => {
     try {
-      await signUpWithEmailAndPassword(email, password);
+      await signUpWithEmailAndPassword(email, password, firstName, lastName);
       Alert.alert("Success", "User account created & signed in!");
       router.push("/home");
     } catch (error: any) {

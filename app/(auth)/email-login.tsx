@@ -37,6 +37,7 @@ const EmailLogin = () => {
         onChangeText={setPassword}
       />
       <CustomButton title="Log In" onPress={handleLogin} />
+      <CustomButton title="Log In" onPress={() => router.push("/home")} />
 
       <View className="flex-row items-center justify-center mt-5">
         <Text className="text-white text-center text-md">
