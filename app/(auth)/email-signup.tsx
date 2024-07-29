@@ -10,12 +10,12 @@ const EmailSignup = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const { signUpWithEmailAndPassword } = useAuth();
+  const { signUpWithEmailAndPassword, signInWithGoogle } = useAuth();
   const router = useRouter();
 
   const handleSignup = async () => {
     try {
-      await signUpWithEmailAndPassword(email, password, firstName, lastName);
+      await signUpWithEmailAndPassword(email, password);
       Alert.alert("Success", "User account created & signed in!");
       router.push("/home");
     } catch (error: any) {
@@ -51,6 +51,7 @@ const EmailSignup = () => {
         onChangeText={setPassword}
       />
       <CustomButton title="Sign up" onPress={handleSignup} />
+
 
       <View className="flex-row items-center justify-center mt-5">
         <Text className="text-white text-center text-md">

@@ -27,9 +27,7 @@ export const auth = initializeAuth(app, {
 
 export const db = getFirestore(app); 
 
-// IOS Client ID: 1080386554290-cq3m5krr8cgutrkku7jq0nk90ij4ff37.apps.googleusercontent.com
-// Android Client ID: 1080386554290-6oss7s410gda3jn8u64hr0ajfuqtqfrs.apps.googleusercontent.com
-// Web Client ID: 246358053582-95e65gm2ti0chd85b9dmrs8dleiu63rn.apps.googleusercontent.com
+
 
 // clientId: '246358053582-95e65gm2ti0chd85b9dmrs8dleiu63rn.apps.googleusercontent.com',
    // androidClientId: '246358053582-95e65gm2ti0chd85b9dmrs8dleiu63rn.apps.googleusercontent.com',
