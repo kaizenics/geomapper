@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 
-export default function RootLayout() {
+export default function AuthLayout() {
   return (
     <Stack>
       <Stack.Screen
@@ -43,6 +43,7 @@ export default function RootLayout() {
           headerTintColor: "#FFF",
         }}
       />
+      
     </Stack>
   );
 }

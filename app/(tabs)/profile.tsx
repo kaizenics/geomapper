@@ -42,10 +42,10 @@ const Profile = () => {
             </Text>
           </View>
           <View className="flex flex-row items-center space-x-2 mt-2">
-            <ProfileButton title="Edit profile" />
+            <ProfileButton title="Edit profile" onPress={() => router.push("/edit-profile")}/>
             <ProfileButton
               title="Settings"
-              onPress={() => router.push("/settings")}
+              onPress={() => router.push("/user-settings")}
             />
           </View>
         </View>
