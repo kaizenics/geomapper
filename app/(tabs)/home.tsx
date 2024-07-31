@@ -3,6 +3,8 @@ import { SafeAreaView, View, ScrollView, Text, Image, RefreshControl } from "rea
 import { LinearGradient } from "expo-linear-gradient";
 import CustomLineChart from "../../components/DailyWaveChart";
 import icons from "../../constants/icons";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const Home = () => {
   const [dailyWaveHeights, setDailyWaveHeights] = useState<number[]>([]);
@@ -16,7 +18,27 @@ const Home = () => {
   const [dailyWindSpeeds, setDailyWindSpeeds] = useState<number[]>([]);
   const [dailyWindDirections, setDailyWindDirections] = useState<number[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string | null>(null);
 
+
+   // Firebase Auth & Firestore
+
+   const auth = getAuth();
+  const db = getFirestore();
+
+  const getUserData = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDoc = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userDoc);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setFirstName(data.firstName || "User");
+      }
+    }
+  };
+
+  // Weather API Data Fetch
   const getWeatherData = async () => {
     try {
       const weatherResponse = await fetch(
@@ -58,6 +80,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    getUserData();
     getWeatherData();
   }, []);
 
@@ -160,7 +183,7 @@ const Home = () => {
       >
         <View className="w-full">
           <Text className="text-black text-2xl font-psemibold pt-4">
-            Hello Nicose John!
+            Hello {firstName ? firstName : "User"}!
           </Text>
           <Text className="text-black text-lg font-regular ">
             {loading

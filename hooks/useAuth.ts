@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
-import { auth, db } from '../config/firebaseConfig'; // Import Firestore configuration
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword, signInWithCredential, onAuthStateChanged, GoogleAuthProvider, User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
+import { auth, db } from '../config/firebaseConfig';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
+  signInWithCredential,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  User
+} from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
@@ -20,8 +27,8 @@ export const useAuth = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-        // Fetch additional user data from Firestore
-        const userDoc = doc(db, "users", user.email || "");
+        // Fetch additional user data from Firestore using UID
+        const userDoc = doc(db, "users", user.uid);
         const userSnapshot = await getDoc(userDoc);
         if (userSnapshot.exists()) {
           setUserData(userSnapshot.data() as { firstName: string; lastName: string });

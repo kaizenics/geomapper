@@ -14,6 +14,16 @@ export default function AuthLayout() {
         }}
       />
       <Stack.Screen
+        name="credentials"
+        options={{
+          title: "Information",
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle: { color: "#FFF" },
+          headerTintColor: "#FFF",
+        }}
+      />
+      <Stack.Screen
         name="email-login"
         options={{
           title: "Log in with Email",
@@ -27,16 +37,6 @@ export default function AuthLayout() {
         name="email-signup"
         options={{
           title: "Sign up with Email",
-          headerShown: true,
-          headerTransparent: true,
-          headerTitleStyle: { color: "#FFF" },
-          headerTintColor: "#FFF",
-        }}
-      />
-      <Stack.Screen
-        name="user-credentials"
-        options={{
-          title: "Information",
           headerShown: true,
           headerTransparent: true,
           headerTitleStyle: { color: "#FFF" },

@@ -36,7 +36,7 @@ const EmailSignup = () => {
     try {
       await signUpWithEmailAndPassword(email, password);
       Alert.alert("Success", "User account created & signed in! Please provide additional information.");
-      router.push("/user-credentials");
+      router.push("/credentials");
     } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {
@@ -82,7 +82,7 @@ const EmailSignup = () => {
         <Text className="text-white text-center text-md">
           Already have an account?{" "}
         </Text>
-        <TouchableOpacity onPress={() => router.push("/log-in")}>
+        <TouchableOpacity >
           <Text className="font-bold text-white text-md">Log In</Text>
         </TouchableOpacity>
       </View>

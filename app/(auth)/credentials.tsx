@@ -22,8 +22,7 @@ function UserCredentials() {
 
   useEffect(() => {
     if (!user) {
-      setErrorMessage("User not authenticated");
-      router.push("/log-in");
+      setErrorMessage("Please provide more information to complete your profile");
     }
   }, [user]);
 
@@ -41,6 +40,7 @@ function UserCredentials() {
           location,
         });
         setErrorMessage("Profile information saved!");
+        router.push("/home");
       } else {
         setErrorMessage("User not authenticated");
       }
