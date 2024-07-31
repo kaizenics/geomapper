@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../hooks/useAuth";
 import FormField from "../../components/Forms/FormField";
@@ -8,16 +8,20 @@ import CustomButton from "../../components/Buttons/CustomButton";
 const EmailLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { loginWithEmailAndPassword } = useAuth();
   const router = useRouter();
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       await loginWithEmailAndPassword(email, password);
       Alert.alert("Success", "User logged in successfully!");
       router.push("/home");
     } catch (error: any) {
       Alert.alert("Error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,8 +40,15 @@ const EmailLogin = () => {
         secureTextEntry
         onChangeText={setPassword}
       />
-      <CustomButton title="Log In" onPress={handleLogin} />
-      <CustomButton title="Log In" onPress={() => router.push("/home")} />
+      
+       
+        {loading ? (
+          <ActivityIndicator color="#fff" size="large" />
+        ) : (
+          <CustomButton title="Log In" onPress={handleLogin} disabled={loading} />
+        )}
+
+<CustomButton title="Log In" onPress={() => router.push("/home")} />
 
       <View className="flex-row items-center justify-center mt-5">
         <Text className="text-white text-center text-md">
