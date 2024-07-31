@@ -1,5 +1,5 @@
-import React from "react";
-import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, ScrollView, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EmailButton from "../components/Buttons/EmailButton";
 import GoogleButton from "../components/Buttons/GoogleButton";
@@ -13,7 +13,26 @@ WebBrowser.maybeCompleteAuthSession();
 export default function Index() {
   const router = useRouter();
   const { user, signInWithGoogle } = useAuth();
-  
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      setLoading(true);
+      try {
+        if (user) {
+          router.push("/home");
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Auth Check Error:', error);
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [user, router]);
+
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
@@ -21,6 +40,14 @@ export default function Index() {
       console.error('Google Sign-In Error:', error);
     }
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView className="bg-[#0e4483] h-full flex justify-center items-center">
+        <ActivityIndicator size="large" color="#ffffff" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="bg-[#0e4483] h-full">

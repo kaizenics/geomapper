@@ -1,16 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
-import icons from "../../constants/icons"; // Make sure to adjust the path to your icons
 import { SafeAreaView } from "react-native-safe-area-context";
-import ProfileButton from "../../components/Buttons/ProfileButton";
-import AddButton from "../../components/Buttons/AddButton";
-
+import ProfileButton from "@/components/Buttons/ProfileButton";
+import AddButton from "@/components/Buttons/AddButton";
+import icons from "@/constants/icons";
 import { useRouter } from "expo-router";
+import { auth } from "@/config/firebaseConfig";
+import { getFirestore, doc, getDoc, DocumentData } from "firebase/firestore";
+import { User } from "firebase/auth"; // Import User type from firebase/auth
 
 const Profile = () => {
   const router = useRouter();
-
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [user, setUser] = useState<User | null>(null); // Use User type from firebase/auth
+  const [emailInitial, setEmailInitial] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        setUser(currentUser);
+
+        // Fetch additional user data from Firestore
+        const userDoc = doc(getFirestore(), "users", currentUser.uid);
+        const docSnap = await getDoc(userDoc);
+
+        const email = currentUser.email || '';
+        const initial = email.split('@')[0];
+        setEmailInitial(`@${initial}`);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data() as DocumentData; 
+          setFirstName(data?.firstName || '');
+          setLastName(data?.lastName || ''); 
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -31,14 +61,11 @@ const Profile = () => {
             />
           </View>
           <Text className="text-lg mt-3 -mb-1 font-psemibold">
-            Nicose John Soriano
+            {firstName} {lastName}
           </Text>
           <View className="flex items-center space-y-2">
             <Text className="text-md text-black font-pregular">
-              @nicosejohnsoriano /{" "}
-              <Text className="text-md text-black font-pregular">
-                Philippines
-              </Text>
+              {emailInitial}
             </Text>
           </View>
           <View className="flex flex-row items-center space-x-2 mt-2">

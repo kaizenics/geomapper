@@ -23,7 +23,7 @@ export default function Settings() {
             try {
               await signOut();
               Alert.alert("Success", "You have been signed out.");
-              router.push("/log-in");
+              router.push("/");
             } catch (error) {
               Alert.alert("Error", "An error occurred while signing out.");
             }
