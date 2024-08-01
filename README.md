@@ -7,4 +7,4 @@
 [![License](https://img.shields.io/github/license/kaizenics/geomapper.svg?style=flat-square)](https://github.com/kaizenics/geomapper)
 
 > [!NOTE]
-> Our capstone project is still in progress in development. This is still not working well and we are addressing some challenges. You can also watch the Admin Panel side of our Project at ![kaizenics/geomapper-admin](https://github.com/kaizenics/geomapper-admin)
+> Our capstone project is still in progress in development. This is still not working well and we are addressing some challenges. You can also watch the Admin Panel side of our Project at [kaizenics/geomapper-admin](https://github.com/kaizenics/geomapper-admin)
