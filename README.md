@@ -10,7 +10,6 @@
 > Our capstone project is still in progress in development. This is still not working well and we are addressing some challenges. You can also watch the Admin Panel side of our Project at [kaizenics/geomapper-admin](https://github.com/kaizenics/geomapper-admin)
 
 ## GitHub Forking and Pull Requests
-======
 
 ### Forking a Repository
 1. Go to the repository you want to contribute to on GitHub.
