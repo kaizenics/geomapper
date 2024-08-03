@@ -82,7 +82,7 @@ const EmailSignup = () => {
         <Text className="text-white text-center text-md">
           Already have an account?{" "}
         </Text>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={() => router.push("/log-in")}>
           <Text className="font-bold text-white text-md">Log In</Text>
         </TouchableOpacity>
       </View>
