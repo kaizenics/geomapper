@@ -26,7 +26,7 @@ export default function EditProfile() {
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false); // Add loading state
+  const [loading, setLoading] = useState<boolean>(false); 
   const router = useRouter();
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function EditProfile() {
   };
 
   const handleSave = async () => {
-    setLoading(true); // Set loading to true
+    setLoading(true); 
     const auth = getAuth();
     const user = auth.currentUser;
     const db = getFirestore();
@@ -100,7 +100,7 @@ export default function EditProfile() {
 
           if (!hasChanges) {
             Alert.alert("Info", "No changes detected.");
-            setLoading(false); // Set loading to false
+            setLoading(false); 
             return;
           }
 
@@ -136,7 +136,7 @@ export default function EditProfile() {
       } catch (error) {
         Alert.alert("Error", (error as Error).message);
       } finally {
-        setLoading(false); // Ensure loading is set to false after the operation
+        setLoading(false); 
       }
     }
   };

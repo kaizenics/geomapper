@@ -19,11 +19,10 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const Profile = () => {
   const router = useRouter();
-  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [emailInitial, setEmailInitial] = useState<string>('');
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
+  const [emailInitial, setEmailInitial] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -36,23 +35,26 @@ const Profile = () => {
       const userDoc = doc(getFirestore(), "users", currentUser.uid);
       const docSnap = await getDoc(userDoc);
 
-      const email = currentUser.email || '';
-      const initial = email.split('@')[0];
+      const email = currentUser.email || "";
+      const initial = email.split("@")[0];
       setEmailInitial(`@${initial}`);
 
       if (docSnap.exists()) {
-        const data = docSnap.data() as DocumentData; 
-        setFirstName(data?.firstName || '');
-        setLastName(data?.lastName || ''); 
+        const data = docSnap.data() as DocumentData;
+        setFirstName(data?.firstName || "");
+        setLastName(data?.lastName || "");
 
         // Fetch profile picture from Firebase Storage
         const storage = getStorage();
-        const profilePicRef = ref(storage, `profile_pictures/${currentUser.uid}`);
+        const profilePicRef = ref(
+          storage,
+          `profile_pictures/${currentUser.uid}`
+        );
         try {
           const url = await getDownloadURL(profilePicRef);
           setProfilePicture(url);
         } catch (error) {
-          console.log('No profile picture found');
+          console.log("No profile picture found");
         }
       }
     }
@@ -68,19 +70,12 @@ const Profile = () => {
     setRefreshing(false);
   };
 
-  const toggleDropdown = () => {
-    setDropdownVisible(!dropdownVisible);
-  };
-
   return (
     <SafeAreaView className="bg-white flex-1">
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
         <View className="flex items-center">
@@ -109,7 +104,10 @@ const Profile = () => {
             </Text>
           </View>
           <View className="flex flex-row items-center space-x-2 mt-2">
-            <ProfileButton title="Edit profile" onPress={() => router.push("/edit-profile")} />
+            <ProfileButton
+              title="Edit profile"
+              onPress={() => router.push("/edit-profile")}
+            />
             <ProfileButton
               title="Settings"
               onPress={() => router.push("/user-settings")}
@@ -117,20 +115,10 @@ const Profile = () => {
           </View>
         </View>
         <View className="flex flex-row justify-between items-left space-x-2 mt-1">
-          <TouchableOpacity
-            onPress={toggleDropdown}
-            className="mt-1 flex-row space-x-1.5"
-          >
+          <View className="mt-1 flex-row space-x-1.5">
             <Text className="text-black text-lg font-psemibold">Catches</Text>
-            <View className="mt-1.5">
-              <Image
-                source={icons.down}
-                className="w-3 h-3"
-                resizeMode="contain"
-              />
-            </View>
-          </TouchableOpacity>
-          <AddButton />
+          </View>
+          <AddButton onPress={() => router.push("/navigate-location")} />
         </View>
 
         <View className="flex flex-row items-center space-x-3 mt-2">
@@ -152,13 +140,6 @@ const Profile = () => {
           </View>
         </View>
       </ScrollView>
-      {dropdownVisible && (
-        <View className="absolute mt-2 bg-gray-200 p-4 rounded">
-          <Text className="text-md text-black font-pregular">Catch 1</Text>
-          <Text className="text-md text-black font-pregular">Catch 2</Text>
-          <Text className="text-md text-black font-pregular">Catch 3</Text>
-        </View>
-      )}
     </SafeAreaView>
   );
 };

@@ -42,7 +42,7 @@ export default function Settings() {
           <AntDesign name="user" size={24} color="#4F8EF7" />
           <Text className="ml-3 text-base">Edit Profile</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="flex-row items-center p-2 bg-gray-100 rounded-b-lg">
+        <TouchableOpacity className="flex-row items-center p-2 bg-gray-100 rounded-b-lg" onPressIn={() => router.push("/change-password")}>
           <AntDesign name="lock" size={24} color="#4F8EF7" />
           <Text className="ml-3 text-base">Change Password</Text>
         </TouchableOpacity>
@@ -55,8 +55,8 @@ export default function Settings() {
           <Text className="ml-3 text-base">Frequently Asked Questions</Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-row items-center p-2 bg-gray-100 rounded-b-lg">
-          <AntDesign name="notification" size={24} color="#4F8EF7" />
-          <Text className="ml-3 text-base">Notifications</Text>
+          <AntDesign name="paperclip" size={24} color="#4F8EF7" />
+          <Text className="ml-3 text-base">Documentation</Text>
         </TouchableOpacity>
       </View>
 
