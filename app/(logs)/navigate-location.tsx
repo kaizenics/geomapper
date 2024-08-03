@@ -33,7 +33,7 @@ const NavigateLocation = () => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView className="bg-white flex-1">
       <View style={styles.container} className="mt-14">
         <TouchableOpacity>
           {/* Add buttons or other UI elements here */}
