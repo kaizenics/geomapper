@@ -1,45 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, ScrollView, Image, TouchableOpacity, ActivityIndicator } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import EmailButton from "../components/Buttons/EmailButton";
-import GoogleButton from "../components/Buttons/GoogleButton";
-import images from "../constants/images";
+import React, { useEffect, useState } from 'react';
+import SplashScreen from "@/app/splash-screen";
 import { useRouter } from "expo-router";
-import { useAuth } from "../hooks/useAuth";
-import * as WebBrowser from 'expo-web-browser';
-
-WebBrowser.maybeCompleteAuthSession();
+import { useAuth } from "@/hooks/useAuth";
+import { SafeAreaView, ActivityIndicator } from "react-native";
 
 export default function Index() {
   const router = useRouter();
-  const { user, signInWithGoogle } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      setLoading(true);
-      try {
-        if (user) {
-          router.push("/home");
-        } else {
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('Auth Check Error:', error);
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [user, router]);
-
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error('Google Sign-In Error:', error);
+    if (user) {
+      router.push("/home");
+    } else {
+      setLoading(false);
     }
-  };
+  }, [user, router]);
 
   if (loading) {
     return (
@@ -49,51 +25,5 @@ export default function Index() {
     );
   }
 
-  return (
-    <SafeAreaView className="bg-[#0e4483] h-full">
-      <ScrollView contentContainerStyle={{ height: "100%" }}>
-        <View className="w-full justify-center h-full items-center px-2">
-          <Image
-            source={images.logo}
-            className="w-[230px] h-[150px]"
-            resizeMode="contain"
-          />
-          <Text className="text-white text-center text-lg font-regular mt-4 mx-10 leading-5">
-            Find fishing spots and track marine fishes powered by SST and Sonar.
-          </Text>
-          <View className="mt-10">
-            <GoogleButton
-              title="Continue with Google"
-              onPress={handleGoogleSignIn}
-            />
-            <EmailButton
-              title="Continue with Email"
-              onPress={() => {
-                router.push("/email-signup");
-              }}
-            />
-          </View>
-          <View className="flex-row items-center justify-center mt-10">
-            <Text className="text-white text-center text-lg font-regular mt-5 mr-1 leading-5">
-              Already have an account?
-            </Text>
-            <TouchableOpacity onPress={() => router.push("/log-in")}>
-              <Text className="text-white text-center text-lg font-bold mt-5 leading-5">
-                Log In
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View className="flex-row items-center justify-center mt-10">
-            <Text className="text-white text-center text-md font-regular mt-20 mx-10 leading-5">
-              By continuing, you agree to our{" "}
-              <Text style={{ fontWeight: 'bold' }}>Terms of Service</Text>{" "}
-              and{" "}
-              <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+  return <SplashScreen />;
 }

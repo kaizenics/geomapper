@@ -21,6 +21,7 @@ export default function AuthLayout() {
           headerTransparent: true,
           headerTitleStyle: { color: "#FFF" },
           headerTintColor: "#FFF",
+          headerBackVisible: false,
         }}
       />
       <Stack.Screen

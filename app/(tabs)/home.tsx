@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, ScrollView, Text, Image, RefreshControl } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import CustomLineChart from "../../components/DailyWaveChart";
-import icons from "../../constants/icons";
+import CustomLineChart from "@/components/DailyWaveChart";
+import icons from "@/constants/icons";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 

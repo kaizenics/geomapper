@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { useAuth } from '../../hooks/useAuth'; 
+import { useAuth } from '@/hooks/useAuth'; 
 import { useRouter } from 'expo-router';
 
 export default function Settings() {
@@ -22,7 +22,6 @@ export default function Settings() {
           onPress: async () => {
             try {
               await signOut();
-              Alert.alert("Success", "You have been signed out.");
               router.push("/");
             } catch (error) {
               Alert.alert("Error", "An error occurred while signing out.");
@@ -50,10 +49,10 @@ export default function Settings() {
       </View>
 
       <View className="mb-5">
-        <Text className="text-lg font-psemibold mb-1">Account Settings</Text>
+        <Text className="text-lg font-psemibold mb-1">Other</Text>
         <TouchableOpacity className="flex-row items-center p-2 bg-gray-100 rounded-t-lg">
           <AntDesign name="mail" size={24} color="#4F8EF7" />
-          <Text className="ml-3 text-base">Email Preferences</Text>
+          <Text className="ml-3 text-base">Frequently Asked Questions</Text>
         </TouchableOpacity>
         <TouchableOpacity className="flex-row items-center p-2 bg-gray-100 rounded-b-lg">
           <AntDesign name="notification" size={24} color="#4F8EF7" />
@@ -63,11 +62,8 @@ export default function Settings() {
 
       <View>
         <Text className="text-lg font-psemibold mb-1">App Settings</Text>
+
         <TouchableOpacity className="flex-row items-center p-2 bg-gray-100 rounded-t-lg">
-          <AntDesign name="appstore-o" size={24} color="#4F8EF7" />
-          <Text className="ml-3 text-base">Theme</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="flex-row items-center p-2 bg-gray-100">
           <AntDesign name="infocirlce" size={24} color="#4F8EF7" />
           <Text className="ml-3 text-base">About</Text>
         </TouchableOpacity>
