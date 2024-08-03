@@ -1,8 +1,6 @@
-
 import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
-import { useAuth } from "../hooks/useAuth"; 
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -17,8 +15,6 @@ export default function RootLayout() {
     "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
   });
 
-  const { user } = useAuth();
-
   useEffect(() => {
     if (error) throw error;
     if (fontsLoaded) SplashScreen.hideAsync();
@@ -28,12 +24,8 @@ export default function RootLayout() {
 
   return (
     <Stack>
-      {user ? (
-        <Stack.Screen name="(tabs)" />
-      ) : (
-        <Stack.Screen name="index" />
-      )}
-      
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="index" />
     </Stack>
   );
 }
