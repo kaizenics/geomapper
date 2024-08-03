@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import SplashScreen from "@/app/splash-screen";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/hooks/useAuth";

@@ -1,13 +1,13 @@
 import React from "react";
 import { Stack } from "expo-router";
 
-export default function SettingsLayout() {
+export default function LogsLayout() {
   return (
     <Stack>
-      <Stack.Screen
-        name="user-settings"
+        <Stack.Screen
+        name="navigate-location"
         options={{
-          title: "Settings",
+          title: "Navigate Location",
           headerShown: true,
           headerTransparent: true,
           headerTitleStyle: { color: "black" },
@@ -15,25 +15,13 @@ export default function SettingsLayout() {
         }}
       />
       <Stack.Screen
-        name="edit-profile"
+        name="catches"
         options={{
-          title: "Edit Profile",
+          title: "Catches",
           headerShown: true,
           headerTransparent: true,
           headerTitleStyle: { color: "black" },
           headerTintColor: "black",
-          
-        }}
-      />
-      <Stack.Screen
-        name="change-password"
-        options={{
-          title: "Change Password",
-          headerShown: true,
-          headerTransparent: true,
-          headerTitleStyle: { color: "black" },
-          headerTintColor: "black",
-          
         }}
       />
     </Stack>

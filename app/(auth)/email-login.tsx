@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator, TextInput, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../hooks/useAuth";
-import FormField from "../../components/Forms/FormField";
 import CustomButton from "../../components/Buttons/CustomButton";
 
 const EmailLogin = () => {
@@ -14,14 +13,12 @@ const EmailLogin = () => {
   const { loginWithEmailAndPassword } = useAuth();
   const router = useRouter();
 
-  const isValidEmail = (email: string) => {
-    // Simple email validation regex
+  const isValidEmail = (email: any) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const isValidPassword = (password: string) => {
-    // Simple password validation (minimum length, could add more checks)
+  const isValidPassword = (password: any) => {
     return password.length >= 6;
   };
 
@@ -50,45 +47,49 @@ const EmailLogin = () => {
       await loginWithEmailAndPassword(email, password);
       router.push("/home");
     } catch (error: any) {
-      console.error("Error logging in: ", error.message);
-      setEmailError("Invalid email or password.");
-      setPasswordError(""); // Clear password error on login failure
+      if (error.code === "auth/wrong-password") {
+        setPasswordError("Incorrect password.");
+        setEmailError("");
+      } else if (error.code === "auth/user-not-found") {
+        setEmailError("Email address not found.");
+        setPasswordError("");
+      } else {
+        setEmailError("Invalid email or password.");
+        setPasswordError(""); 
+      }
       setLoading(false);
     }
   };
 
   return (
     <View className="flex-1 pt-16 items-center bg-[#0e4483] relative">
-      <FormField
-        label="Email Address"
-        value={email}
-        placeholder="Enter your email address"
-        onChangeText={setEmail}
-      />
-    
-        {emailError ? (
-          <Text className="text-red-500 text-left">{emailError}</Text>
-        ) : null}
-        
+      <View className="mb-4 w-full px-4">
+        <Text className="text-lg font-semibold mb-2 text-white">Email Address</Text>
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email address"
+          style={[styles.input, emailError ? styles.inputError : null]}
+        />
+        {emailError ? <Text className="text-red-500 mt-1">{emailError}</Text> : null}
+      </View>
 
-
-      <FormField
-        label="Password"
-        value={password}
-        placeholder="Enter your password"
-        secureTextEntry
-        onChangeText={setPassword}
-      />
-      {passwordError ? (
-        <Text className="text-red-500 text-left mb-2">{passwordError}</Text>
-      ) : null}
+      <View className="mb-4 w-full px-4">
+        <Text className="text-lg font-semibold mb-2 text-white">Password</Text>
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Enter your password"
+          secureTextEntry
+          style={[styles.input, passwordError ? styles.inputError : null]}
+        />
+        {passwordError ? <Text className="text-red-500 mt-1">{passwordError}</Text> : null}
+      </View>
 
       <CustomButton title="Log In" onPress={handleLogin} disabled={loading} />
 
       <View className="flex-row items-center justify-center mt-5">
-        <Text className="text-white text-center text-md">
-          Did you forget your password?{" "}
-        </Text>
+        <Text className="text-white text-center text-md">Did you forget your password?{" "}</Text>
         <TouchableOpacity onPress={() => router.push("/reset-password")}>
           <Text className="font-bold text-white text-md">Reset Password</Text>
         </TouchableOpacity>
@@ -103,5 +104,18 @@ const EmailLogin = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  input: {
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: "#fff",
+  },
+  inputError: {
+    borderColor: "#f44336",
+  },
+});
 
 export default EmailLogin;
