@@ -180,7 +180,7 @@ const NavigateLocation = () => {
       console.error(error);
       Alert.alert("Error", "Failed to save location and upload screenshot.");
     } finally {
-      setLoading(false); // End loading
+      setLoading(false); 
     }
   };
 
