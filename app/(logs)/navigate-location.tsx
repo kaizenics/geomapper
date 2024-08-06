@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Animated,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -37,6 +38,7 @@ const NavigateLocation = () => {
   const pulseAnimation = useState(new Animated.Value(1))[0];
   const opacityPulseAnimation = useState(new Animated.Value(1))[0];
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [loading, setLoading] = useState(false); // Add loading state
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
 
@@ -129,6 +131,13 @@ const NavigateLocation = () => {
   };
 
   const saveLocation = async () => {
+    if (!describeLocation.trim()) {
+      Alert.alert("Error", "Please enter a description for the fishing spot.");
+      return;
+    }
+
+    setLoading(true); 
+
     try {
       console.log("Describe Location:", describeLocation);
       // Capture screenshot of the map
@@ -164,12 +173,14 @@ const NavigateLocation = () => {
           const firestore = getFirestore();
           await setDoc(doc(firestore, "log_catch", user.uid + "_" + Date.now()), locationData);
 
-          Alert.alert("Success", "Location saved and screenshot uploaded.");
+          router.push("/catches");
         }
       }
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to save location and upload screenshot.");
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -231,16 +242,20 @@ const NavigateLocation = () => {
             placeholder="Enter the location of the fishing spot"
             onChangeText={setDescribeLocation}
           />
-          <TouchableOpacity
-            className="bg-[#1e5aa0] rounded-full py-3 items-center mb-2"
-            onPress={saveLocation}
-          >
-            <View className="flex-row items-center space-x-3">
-              <Text className="text-white text-lg font-semibold">
-                Save Location
-              </Text>
-            </View>
-          </TouchableOpacity>
+          {loading ? (
+            <ActivityIndicator size="large" color="#1e5aa0" /> // Show spinner when loading
+          ) : (
+            <TouchableOpacity
+              className="bg-[#1e5aa0] rounded-full py-3 items-center mb-2"
+              onPress={saveLocation}
+            >
+              <View className="flex-row items-center space-x-3">
+                <Text className="text-white text-lg font-semibold">
+                  Save Location
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
