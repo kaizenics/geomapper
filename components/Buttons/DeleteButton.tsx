@@ -20,7 +20,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
   ...props
 }) => {
   return (
-    <TouchableOpacity {...props} className="bg-transparent rounded-full py-2 px-28 mb-2 border border-red-600">
+    <TouchableOpacity {...props} className="bg-transparent rounded-full py-2 items-center mb-2 border border-red-600">
       <View className="flex-row items-center">
         <Text className="text-red-600 text-lg font-medium">{title}</Text>
       </View>
