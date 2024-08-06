@@ -30,6 +30,10 @@ const NavigateLocation = () => {
     longitude: 125.4553,
   });
   const [isPanning, setIsPanning] = useState(false);
+  const [centerLocation, setCenterLocation] = useState({
+    latitude: 7.1907,
+    longitude: 125.4553,
+  });
   const pulseAnimation = useState(new Animated.Value(1))[0];
   const opacityPulseAnimation = useState(new Animated.Value(1))[0];
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
@@ -53,6 +57,7 @@ const NavigateLocation = () => {
         longitudeDelta: 0.0421,
       });
       setCurrentLocation({ latitude, longitude });
+      setCenterLocation({ latitude, longitude });
     };
 
     getLocation();
@@ -78,11 +83,11 @@ const NavigateLocation = () => {
           ]),
           Animated.timing(opacityPulseAnimation, {
             toValue: 0,
-            duration: 0, // Immediately set opacity to 0
+            duration: 0,
             useNativeDriver: true,
           }),
         ]).start();
-      }, 300); 
+      }, 300);
 
       setTimeoutId(newTimeoutId);
     } else {
@@ -106,7 +111,21 @@ const NavigateLocation = () => {
       Math.abs(newRegion.longitudeDelta - region.longitudeDelta) > 0.0001
     ) {
       setRegion(newRegion);
+      setCenterLocation({
+        latitude: newRegion.latitude,
+        longitude: newRegion.longitude,
+      });
     }
+  };
+
+  const handleMapPress = (event: any) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setRegion((prevRegion) => ({
+      ...prevRegion,
+      latitude,
+      longitude,
+    }));
+    setCurrentLocation({ latitude, longitude });
   };
 
   const saveLocation = async () => {
@@ -118,12 +137,12 @@ const NavigateLocation = () => {
           format: "png",
           quality: 1.0,
         });
-  
+
         // Upload screenshot to Firebase Storage
         const auth = getAuth();
         const user = auth.currentUser;
         const storage = getStorage();
-  
+
         if (user) {
           // Upload the screenshot
           const response = await fetch(screenshotUri);
@@ -131,7 +150,7 @@ const NavigateLocation = () => {
           const storageRef = ref(storage, `map_screenshots/${user.uid}/${Date.now()}.png`);
           await uploadBytes(storageRef, blob);
           const downloadURL = await getDownloadURL(storageRef);
-  
+
           // Prepare location data
           const locationData = {
             latitude: region.latitude,
@@ -140,16 +159,16 @@ const NavigateLocation = () => {
             screenshotURL: downloadURL,
             timestamp: new Date(),
           };
-  
+
           // Save location data to Firestore
           const firestore = getFirestore();
           await setDoc(doc(firestore, "log_catch", user.uid + "_" + Date.now()), locationData);
-  
+
           Alert.alert("Success", "Location saved and screenshot uploaded.");
         }
       }
     } catch (error) {
-      console.error(error); // Log error to console
+      console.error(error);
       Alert.alert("Error", "Failed to save location and upload screenshot.");
     }
   };
@@ -175,12 +194,19 @@ const NavigateLocation = () => {
           region={region}
           onRegionChange={handleRegionChange}
           onRegionChangeComplete={handleRegionChangeComplete}
+          onPress={handleMapPress}
           ref={mapRef}
         >
           <Marker
             coordinate={currentLocation}
             title="Current Location"
             description="This is where you are"
+          />
+          <Marker
+            coordinate={centerLocation}
+            title="Center Location"
+            description="Center of the map"
+            pinColor="blue" 
           />
         </MapView>
         <View style={styles.markerFixed}>
@@ -190,7 +216,7 @@ const NavigateLocation = () => {
               {
                 transform: [{ scale: pulseAnimation }],
                 opacity: opacityPulseAnimation,
-                pointerEvents: "none", 
+                pointerEvents: "none",
               },
             ]}
           />
@@ -233,8 +259,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: "50%",
     top: "50%",
-    marginLeft: -7,
-    marginTop: -7,
+    marginLeft: -3,
+    marginTop: -5,
     alignItems: "center",
     justifyContent: "center",
   },
