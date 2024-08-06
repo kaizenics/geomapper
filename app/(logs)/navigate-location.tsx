@@ -136,7 +136,7 @@ const NavigateLocation = () => {
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true); 
 
     try {
       console.log("Describe Location:", describeLocation);
