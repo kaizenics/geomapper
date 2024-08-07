@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, SafeAreaView, ScrollView } from "react-native";
 
-const Catches = () => {
+const CatchDetails = () => {
   return (
     <>
       <SafeAreaView className="bg-white flex-1">
@@ -15,4 +15,4 @@ const Catches = () => {
   );
 };
 
-export default Catches;
+export default CatchDetails;

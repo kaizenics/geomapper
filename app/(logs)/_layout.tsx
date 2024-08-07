@@ -15,9 +15,9 @@ export default function LogsLayout() {
         }}
       />
       <Stack.Screen
-        name="catches"
+        name="catch-details"
         options={{
-          title: "Catches",
+          title: "Catch Details",
           headerShown: true,
           headerTransparent: true,
           headerTitleStyle: { color: "black" },

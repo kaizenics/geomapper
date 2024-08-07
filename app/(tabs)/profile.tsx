@@ -133,7 +133,7 @@ const Profile = () => {
             <Text className="text-black text-lg font-psemibold">
               Start your logbook
             </Text>
-            <Text className="text-gray-500 text-sm font-pregular">
+            <Text className="text-gray-500 text-sm font-pregular leading-4">
               Track all your catches in one place! Find and relive your fishing
               memories whenever you'd like.
             </Text>
