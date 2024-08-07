@@ -21,24 +21,25 @@ import { useRouter } from "expo-router";
 const NavigateLocation = () => {
   const [describeLocation, setDescribeLocation] = useState<string>("");
   const [region, setRegion] = useState({
-    latitude: 7.1907,
-    longitude: 125.4553,
+    latitude: 7.0732,
+    longitude: 125.6104,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
   const [currentLocation, setCurrentLocation] = useState({
-    latitude: 7.1907,
-    longitude: 125.4553,
+    latitude: 7.0732,
+    longitude: 125.6104,
   });
   const [isPanning, setIsPanning] = useState(false);
   const [centerLocation, setCenterLocation] = useState({
-    latitude: 7.1907,
-    longitude: 125.4553,
+    latitude: 7.0732,
+    longitude: 125.6104,
   });
   const pulseAnimation = useState(new Animated.Value(1))[0];
   const opacityPulseAnimation = useState(new Animated.Value(1))[0];
+  const dotOpacityAnimation = useState(new Animated.Value(1))[0];
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
 
@@ -82,6 +83,11 @@ const NavigateLocation = () => {
               duration: 1500,
               useNativeDriver: true,
             }),
+            Animated.timing(dotOpacityAnimation, {
+              toValue: 0,
+              duration: 1500,
+              useNativeDriver: true,
+            }),
           ]),
           Animated.timing(opacityPulseAnimation, {
             toValue: 0,
@@ -97,8 +103,10 @@ const NavigateLocation = () => {
       pulseAnimation.setValue(1);
       opacityPulseAnimation.stopAnimation();
       opacityPulseAnimation.setValue(1);
+      dotOpacityAnimation.stopAnimation();
+      dotOpacityAnimation.setValue(1);
     }
-  }, [isPanning, pulseAnimation, opacityPulseAnimation]);
+  }, [isPanning, pulseAnimation, opacityPulseAnimation, dotOpacityAnimation]);
 
   const handleRegionChange = () => {
     setIsPanning(true);
@@ -136,7 +144,7 @@ const NavigateLocation = () => {
       return;
     }
 
-    setLoading(true); 
+    setLoading(true);
 
     try {
       console.log("Describe Location:", describeLocation);
@@ -173,14 +181,14 @@ const NavigateLocation = () => {
           const firestore = getFirestore();
           await setDoc(doc(firestore, "log_catch", user.uid + "_" + Date.now()), locationData);
 
-          router.push("/catches");
+          router.push("/catch-details");
         }
       }
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to save location and upload screenshot.");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -217,7 +225,7 @@ const NavigateLocation = () => {
             coordinate={centerLocation}
             title="Center Location"
             description="Center of the map"
-            pinColor="blue" 
+            pinColor="blue"
           />
         </MapView>
         <View style={styles.markerFixed}>
@@ -231,7 +239,14 @@ const NavigateLocation = () => {
               },
             ]}
           />
-          <View style={styles.marker} />
+             <Animated.View
+            style={[
+              styles.marker,
+              {
+                opacity: dotOpacityAnimation,
+              },
+            ]}
+          />
         </View>
       </View>
       <View className="mt-2">
@@ -243,7 +258,7 @@ const NavigateLocation = () => {
             onChangeText={setDescribeLocation}
           />
           {loading ? (
-            <ActivityIndicator size="large" color="#1e5aa0" /> // Show spinner when loading
+            <ActivityIndicator size="large" color="#1e5aa0" />
           ) : (
             <TouchableOpacity
               className="bg-[#1e5aa0] rounded-full py-3 items-center mb-2"

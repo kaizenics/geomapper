@@ -87,7 +87,7 @@ const ChangePassword = () => {
       setCurrentPassword("");
       setNewPassword("");
       setErrors({});
-      router.push("/settings");
+      router.push("/user-settings");
 
     } catch (error) {
       Alert.alert("Error", (error as Error).message);
@@ -116,9 +116,9 @@ const ChangePassword = () => {
 
       </View>
 
-      <View className="mx-3">
+      <View className="mx-3 -mt-5">
           <TouchableOpacity
-            className="bg-[#1e5aa0] rounded-full py-3 px-[105px] mb-2"
+            className="bg-[#1e5aa0] rounded-full py-3 items-center mb-2"
             onPress={handleChangePassword}
           >
             <View className="flex-row items-center space-x-3">

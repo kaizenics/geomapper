@@ -199,7 +199,7 @@ const Home = () => {
             locations={[0, 1]}
             style={{ borderRadius: 10, padding: 16, marginTop: 24 }}
           >
-            <View className="flex flex-row justify-between">
+            <View className="flex flex-row">
               <View className="flex-col justify-between">
                 <Text className="text-white text-lg mb-2 font-medium">
                   {loading
@@ -220,7 +220,7 @@ const Home = () => {
                   {new Date().toLocaleDateString()}
                 </Text>
               </View>
-              <View className="flex-row justify-between mt-2 space-x-4">
+              <View className="flex-row justify-between mt-2 space-x-3 px-10">
                 {nextDays.slice(1).map((day, index) => (
                   <View key={index} className="items-center">
                     <Text className="text-white font-semibold mb-5">{day}</Text>
@@ -257,8 +257,8 @@ const Home = () => {
               marginTop: 6,
             }}
           >
-            <View className="flex flex-row justify-between">
-              <View className="flex-row items-center space-x-2.5">
+            <View className="flex flex-row">
+              <View className="flex-row items-center">
                 <View className="ml-2 mr-3">
                   <Image
                     source={icons.wind}
@@ -267,8 +267,9 @@ const Home = () => {
                     style={{ tintColor: "white" }}
                   />
                 </View>
+                <View className="flex-row mx-2">
                 {nextDays.slice(1, 5).map((day, index) => (
-                  <View key={index} className="flex-col items-center">
+                  <View key={index} className="flex-col items-center mx-4">
                     <Image
                       source={icons.pointer}
                       className="w-6 h-6"
@@ -285,8 +286,7 @@ const Home = () => {
                       }}
                     />
                     <Text className="text-white text-md mt-2 font-medium">
-                      {loading ? "Loading..." : dailyWindSpeeds[index] || "N/A"}{" "}
-                      km/h
+                      {loading ? "Loading..." : dailyWindSpeeds[index] || "N/A"}
                     </Text>
                     <Text className="text-white text-md mb-2 font-medium">
                       {loading
@@ -296,6 +296,7 @@ const Home = () => {
                     </Text>
                   </View>
                 ))}
+                </View>
               </View>
             </View>
           </LinearGradient>
