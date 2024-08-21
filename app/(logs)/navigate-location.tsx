@@ -14,26 +14,27 @@ import * as Location from "expo-location";
 import LocationForm from "@/components/Forms/LocationForm";
 import { captureRef } from "react-native-view-shot";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, collection } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 
 const NavigateLocation = () => {
-  const [describeLocation, setDescribeLocation] = useState<string>("");
+  const { describeLocation: initialDescribeLocation, latitude: initialLatitude, longitude: initialLongitude } = useLocalSearchParams();
+  const [describeLocation, setDescribeLocation] = useState<string>(Array.isArray(initialDescribeLocation) ? initialDescribeLocation.join("") : initialDescribeLocation || "");
   const [region, setRegion] = useState({
-    latitude: 7.0732,
-    longitude: 125.6104,
+    latitude: parseFloat(Array.isArray(initialLatitude) ? initialLatitude[0] : initialLatitude || "7.0732"),
+    longitude: parseFloat(initialLongitude as string || "125.6104"),
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
   const [currentLocation, setCurrentLocation] = useState({
-    latitude: 7.0732,
-    longitude: 125.6104,
+    latitude: parseFloat(Array.isArray(initialLatitude) ? initialLatitude[0] : initialLatitude || "7.0732"),
+    longitude: parseFloat(Array.isArray(initialLongitude) ? initialLongitude[0] : initialLongitude || "125.6104"),
   });
   const [isPanning, setIsPanning] = useState(false);
   const [centerLocation, setCenterLocation] = useState({
-    latitude: 7.0732,
-    longitude: 125.6104,
+    latitude: parseFloat(Array.isArray(initialLatitude) ? initialLatitude[0] : initialLatitude || "7.0732"),
+    longitude: parseFloat(Array.isArray(initialLongitude) ? initialLongitude[0] : initialLongitude || "125.6104"),
   });
   const pulseAnimation = useState(new Animated.Value(1))[0];
   const opacityPulseAnimation = useState(new Animated.Value(1))[0];
@@ -42,6 +43,11 @@ const NavigateLocation = () => {
   const [loading, setLoading] = useState(false);
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
+
+  // Firebase references
+  const storage = getStorage();
+  const db = getFirestore();
+  const auth = getAuth();
 
   useEffect(() => {
     const getLocation = async () => {
@@ -143,46 +149,45 @@ const NavigateLocation = () => {
       Alert.alert("Error", "Please enter a description for the fishing spot.");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      console.log("Describe Location:", describeLocation);
-      // Capture screenshot of the map
       if (mapRef.current) {
         const screenshotUri = await captureRef(mapRef.current, {
           format: "png",
           quality: 1.0,
         });
-
-        // Upload screenshot to Firebase Storage
-        const auth = getAuth();
-        const user = auth.currentUser;
-        const storage = getStorage();
-
-        if (user) {
-          // Upload the screenshot
-          const response = await fetch(screenshotUri);
-          const blob = await response.blob();
-          const storageRef = ref(storage, `map_screenshots/${user.uid}/${Date.now()}.png`);
-          await uploadBytes(storageRef, blob);
-          const downloadURL = await getDownloadURL(storageRef);
-
-          // Prepare location data
-          const locationData = {
-            latitude: region.latitude,
-            longitude: region.longitude,
+  
+        const response = await fetch(screenshotUri);
+        const blob = await response.blob();
+        const storageRef = ref(storage, `map_screenshots/${Date.now()}.png`);
+        await uploadBytes(storageRef, blob);
+        const downloadURL = await getDownloadURL(storageRef);
+  
+        const newDocRef = doc(collection(db, "log_catch"));
+        await setDoc(newDocRef, {
+          userId: auth.currentUser?.uid,
+          latitude: region.latitude.toString(),
+          longitude: region.longitude.toString(),
+          description: describeLocation,
+          screenshotURL: downloadURL,
+          fishName: "",
+          fishWeight: "",
+          fishLength: "",
+          dayCaught: "",
+          timeCaught: "",
+        });
+  
+        router.push({
+          pathname: "/catch-details",
+          params: {
+            documentId: newDocRef.id,
+            latitude: region.latitude.toString(),
+            longitude: region.longitude.toString(),
             description: describeLocation,
-            screenshotURL: downloadURL,
-            timestamp: new Date(),
-          };
-
-          // Save location data to Firestore
-          const firestore = getFirestore();
-          await setDoc(doc(firestore, "log_catch", user.uid + "_" + Date.now()), locationData);
-
-          router.push("/catch-details");
-        }
+          }
+        });
       }
     } catch (error) {
       console.error(error);
@@ -195,7 +200,7 @@ const NavigateLocation = () => {
   return (
     <SafeAreaView className="bg-white flex-1">
       <View className="mt-14">
-        <View className="flex flex-row text-lg  justify-center font-semibold text-black space-x-28">
+        <View className="flex flex-row text-lg justify-center font-semibold text-black space-x-28">
           <Text className="text-lg font-psemibold text-black">
             Lat:{" "}
             <Text className="font-pregular">{region.latitude.toFixed(6)}</Text>
@@ -239,7 +244,7 @@ const NavigateLocation = () => {
               },
             ]}
           />
-             <Animated.View
+          <Animated.View
             style={[
               styles.marker,
               {
@@ -311,5 +316,4 @@ const styles = StyleSheet.create({
     borderColor: "#e1e1e1",
   },
 });
-
 export default NavigateLocation;
