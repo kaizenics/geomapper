@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileButton from "@/components/Buttons/ProfileButton";
@@ -13,7 +14,16 @@ import AddButton from "@/components/Buttons/AddButton";
 import icons from "@/constants/icons";
 import { useRouter } from "expo-router";
 import { auth } from "@/config/firebaseConfig";
-import { getFirestore, doc, getDoc, DocumentData } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  DocumentData,
+} from "firebase/firestore";
 import { User } from "firebase/auth";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
@@ -25,25 +35,28 @@ const Profile = () => {
   const [lastName, setLastName] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [fishingSpots, setFishingSpots] = useState<DocumentData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); 
 
   const fetchUserData = async () => {
+    setLoading(true);
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUser(currentUser);
-
-      // Fetch additional user data from Firestore
+  
+      // Fetch user info from Firestore
       const userDoc = doc(getFirestore(), "users", currentUser.uid);
       const docSnap = await getDoc(userDoc);
-
+  
       const email = currentUser.email || "";
       const initial = email.split("@")[0];
       setEmailInitial(`@${initial}`);
-
+  
       if (docSnap.exists()) {
         const data = docSnap.data() as DocumentData;
         setFirstName(data?.firstName || "");
         setLastName(data?.lastName || "");
-
+  
         // Fetch profile picture from Firebase Storage
         const storage = getStorage();
         const profilePicRef = ref(
@@ -56,12 +69,28 @@ const Profile = () => {
         } catch (error) {
           console.log("No profile picture found");
         }
+  
+        // Fetch fishing spot descriptions and screenshots from Firestore
+        const db = getFirestore();
+        const catchQuery = query(
+          collection(db, "log_catch"),
+          where("userId", "==", currentUser.uid)
+        );
+        const querySnapshot = await getDocs(catchQuery);
+        const spots = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+  
+        setFishingSpots(spots);
       }
     }
+    setLoading(false); 
   };
 
   useEffect(() => {
     fetchUserData();
+    console.log(fishingSpots);
   }, []);
 
   const onRefresh = async () => {
@@ -69,6 +98,15 @@ const Profile = () => {
     await fetchUserData();
     setRefreshing(false);
   };
+
+  if (loading) {
+    // Display the loading spinner
+    return (
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView className="bg-white flex-1">
@@ -121,24 +159,68 @@ const Profile = () => {
           <AddButton onPress={() => router.push("/navigate-location")} />
         </View>
 
-        <View className="flex flex-row items-center space-x-3 mt-2">
-          <View className="w-24 h-24 rounded-md bg-gray-200 flex justify-center items-center">
-            <Image
-              source={icons.fish}
-              className="w-12 h-12"
-              resizeMode="contain"
-            />
-          </View>
-          <View className="flex-1 mb-4">
-            <Text className="text-black text-lg font-psemibold">
-              Start your logbook
-            </Text>
-            <Text className="text-gray-500 text-sm font-pregular leading-4">
-              Track all your catches in one place! Find and relive your fishing
-              memories whenever you'd like.
-            </Text>
-          </View>
-        </View>
+        {/* FISHING SPOT SECTION  */}
+
+        {fishingSpots.length > 0 ? (
+          fishingSpots.map((spot, index) => (
+            <TouchableOpacity
+              key={index}
+              className="my-1"
+              onPress={() =>
+                router.push({
+                  pathname: "/edit-catches",
+                  params: {
+                    id: spot.id,
+                    latitude: spot.latitude,
+                    longitude: spot.longitude,
+                    description: spot.description,
+                    screenshotURL: spot.screenshotURL,
+                    fishName: spot.fishName,
+                    fishWeight: spot.fishWeight,
+                    fishLength: spot.fishLength,
+                    dayCaught: spot.dayCaught,
+                    timeCaught: spot.timeCaught,
+                  },
+                })
+              }
+            >
+              {spot.screenshotURL && (
+                <Image
+                  source={{ uri: spot.screenshotURL }}
+                  className="w-full h-32 mt-2 rounded-xl relative"
+                  resizeMode="cover"
+                />
+              )}
+              <View className="absolute bg-white bottom-0 right-0 rounded-tl-xl px-3 py-1.5 flex-row justify-center space-x-3">
+                <Text className="text-black text-md font-psemibold">
+                  {spot.description}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <TouchableOpacity
+            className="flex flex-row items-center space-x-3 mt-2"
+            onPress={() => router.push("/navigate-location")}
+          >
+            <View className="w-24 h-24 rounded-md bg-gray-200 flex justify-center items-center">
+              <Image
+                source={icons.fish}
+                className="w-12 h-12"
+                resizeMode="contain"
+              />
+            </View>
+            <View className="flex-1 mb-4">
+              <Text className="text-black text-lg font-psemibold">
+                Start your logbook
+              </Text>
+              <Text className="text-gray-500 text-sm font-pregular leading-4">
+                Track all your catches in one place! Find and relive your
+                fishing memories whenever you'd like.
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
