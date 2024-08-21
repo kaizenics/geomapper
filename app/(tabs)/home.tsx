@@ -20,7 +20,6 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [firstName, setFirstName] = useState<string | null>(null);
 
-
    // Firebase Auth & Firestore
 
    const auth = getAuth();
@@ -199,7 +198,7 @@ const Home = () => {
             locations={[0, 1]}
             style={{ borderRadius: 10, padding: 16, marginTop: 24 }}
           >
-            <View className="flex flex-row">
+            <View className="flex flex-row justify-between">
               <View className="flex-col justify-between">
                 <Text className="text-white text-lg mb-2 font-medium">
                   {loading
@@ -220,7 +219,7 @@ const Home = () => {
                   {new Date().toLocaleDateString()}
                 </Text>
               </View>
-              <View className="flex-row justify-between mt-2 space-x-3 px-10">
+              <View className="flex-row justify-between mt-2 space-x-3">
                 {nextDays.slice(1).map((day, index) => (
                   <View key={index} className="items-center">
                     <Text className="text-white font-semibold mb-5">{day}</Text>
@@ -257,8 +256,8 @@ const Home = () => {
               marginTop: 6,
             }}
           >
-            <View className="flex flex-row">
-              <View className="flex-row items-center">
+            <View className="flex justify-between">
+              <View className="flex-row items-center justify-between">
                 <View className="ml-2 mr-3">
                   <Image
                     source={icons.wind}
