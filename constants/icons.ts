@@ -19,6 +19,7 @@ import fish from '@/assets/icons/fish.png';
 import down from '@/assets/icons/down.png';
 import plus from '@/assets/icons/plus.png';
 import location from '@/assets/icons/location.png';
+import edit from '@/assets/icons/edit.png';
 
 export default {
     map,
@@ -42,4 +43,5 @@ export default {
     down,
     plus,
     location,
+    edit,
 }
