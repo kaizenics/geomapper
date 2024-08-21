@@ -11,14 +11,14 @@ import {
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import LocationForm from "@/components/Forms/LocationForm";
+import EditLocationForm from "@/components/Forms/EditLocationForm";
 import { captureRef } from "react-native-view-shot";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getFirestore, doc, setDoc, collection } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useRouter, useLocalSearchParams } from "expo-router";
 
-const NavigateLocation = () => {
+const EditLocation = () => {
   const { describeLocation: initialDescribeLocation, latitude: initialLatitude, longitude: initialLongitude } = useLocalSearchParams();
   const [describeLocation, setDescribeLocation] = useState<string>(Array.isArray(initialDescribeLocation) ? initialDescribeLocation.join("") : initialDescribeLocation || "");
   const [region, setRegion] = useState({
@@ -179,10 +179,11 @@ const NavigateLocation = () => {
           timeCaught: "",
         });
   
+        // Navigate back with updated parameters
         router.push({
-          pathname: "/catch-details",
+          pathname: "/edit-catches",
           params: {
-            documentId: newDocRef.id,
+            id: newDocRef.id,
             latitude: region.latitude.toString(),
             longitude: region.longitude.toString(),
             description: describeLocation,
@@ -255,28 +256,18 @@ const NavigateLocation = () => {
         </View>
       </View>
       <View className="mt-2">
-        <TouchableOpacity className="mx-2 space-y-2">
-          <LocationForm
-            label="Fishing Spot Location"
-            value={describeLocation}
-            placeholder="Enter the location of the fishing spot"
-            onChangeText={setDescribeLocation}
-          />
-          {loading ? (
-            <ActivityIndicator size="large" color="#1e5aa0" />
-          ) : (
-            <TouchableOpacity
-              className="bg-[#1e5aa0] rounded-full py-3 items-center mb-2"
-              onPress={saveLocation}
-            >
-              <View className="flex-row items-center space-x-3">
-                <Text className="text-white text-lg font-semibold">
-                  Save Location
-                </Text>
-              </View>
-            </TouchableOpacity>
-          )}
+        <TouchableOpacity
+          className="mx-10 my-5 bg-[#0066CC] px-3 py-3 rounded-lg"
+          onPress={saveLocation}
+        >
+          <Text className="text-center text-white text-lg font-semibold">
+            {loading ? <ActivityIndicator color="white" /> : "Save Location"}
+          </Text>
         </TouchableOpacity>
+        <EditLocationForm
+          onDescribeLocationChange={setDescribeLocation}
+          describeLocation={describeLocation}
+        />
       </View>
     </SafeAreaView>
   );
@@ -284,36 +275,33 @@ const NavigateLocation = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: "60%",
-    width: "100%",
+    flex: 1,
+    justifyContent: "center",
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
   },
   markerFixed: {
     position: "absolute",
-    left: "50%",
-    top: "50%",
-    marginLeft: -3,
-    marginTop: -5,
-    alignItems: "center",
+    alignSelf: "center",
     justifyContent: "center",
-  },
-  marker: {
-    height: 5,
-    width: 5,
-    borderRadius: 7,
-    backgroundColor: "white",
-    borderColor: "white",
-    borderWidth: 2,
+    alignItems: "center",
+    top: "50%",
   },
   pulse: {
     position: "absolute",
-    height: 124,
-    width: 124,
-    borderRadius: 70,
-    borderWidth: 1,
-    borderColor: "#e1e1e1",
+    backgroundColor: "rgba(0, 150, 255, 0.3)",
+    borderRadius: 50,
+    width: 20,
+    height: 20,
+  },
+  marker: {
+    position: "absolute",
+    backgroundColor: "rgba(0, 150, 255, 0.7)",
+    borderRadius: 50,
+    width: 10,
+    height: 10,
   },
 });
-export default NavigateLocation;
+
+export default EditLocation;

@@ -15,11 +15,31 @@ export default function LogsLayout() {
         }}
       />
       <Stack.Screen
+        name="edit-location"
+        options={{
+          title: "Navigate Location",
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle: { color: "black" },
+          headerTintColor: "black",
+        }}
+      />
+      <Stack.Screen
         name="catch-details"
         options={{
           title: "Catch Details",
           headerShown: true,
-          headerTransparent: true,
+          headerTransparent: false,
+          headerTitleStyle: { color: "black" },
+          headerTintColor: "black",
+        }}
+      />
+      <Stack.Screen
+        name="edit-catches"
+        options={{
+          title: "Catch Details",
+          headerShown: true,
+          headerTransparent: false,
           headerTitleStyle: { color: "black" },
           headerTintColor: "black",
         }}
