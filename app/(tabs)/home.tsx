@@ -25,7 +25,7 @@ const Home = () => {
   const [dailyWindDirections, setDailyWindDirections] = useState<number[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [firstName, setFirstName] = useState<string | null>(null);
-
+  const [locationAddress, setLocationAddress] = useState<string>("Loading...");
   const [location, setLocation] = useState<LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -55,6 +55,16 @@ const Home = () => {
 
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
+
+    // Reverse Geocoding to get the address
+    const reverseGeocode = await Location.reverseGeocodeAsync(location.coords);
+    if (reverseGeocode.length > 0) {
+      const address = `${reverseGeocode[0].city}, ${reverseGeocode[0].region}`;
+      setLocationAddress(address);
+    } else {
+      setLocationAddress("Address not available");
+    }
+
     return location;
   };
 
@@ -77,9 +87,6 @@ const Home = () => {
         `https://marine-api.open-meteo.com/v1/marine?latitude=${latitude}&longitude=${longitude}&hourly=wave_height,wave_direction,wave_period&daily=&timezone=Asia%2FSingapore`
       );
       const marineData = await marineResponse.json();
-  
-      console.log("Weather Data:", weatherData);
-      console.log("Marine Data:", marineData);
 
       const {
         temperature_2m,
@@ -246,15 +253,27 @@ const Home = () => {
         contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <View className="w-full">
+        <View className="">
           <Text className="text-black text-2xl font-psemibold pt-4">
             Hello {firstName ? firstName : "User"}!
           </Text>
-          <Text className="text-black text-lg font-regular ">
+          <Text className="text-black text-lg ">
             {loading
               ? "Loading..."
               : getCustomWeatherPhrase(getWeatherDescription(weatherCodes[0]))}
           </Text>
+            
+            <View className=" flex-row items-center pt-2">
+              <View className="flex flex-row rounded-full border border-[#0e4483] px-2 py-2">
+              <Image
+              source={icons.location}
+              className="w-4 h-4 mr-1.5"
+              resizeMode="contain"
+              style={{ tintColor: "#0e4483" }}
+              />
+              <Text className="text-[#0e4483] text-sm font-regular">{locationAddress}</Text>
+              </View>
+            </View>
 
           {/* Weather Forecast */}
           <LinearGradient
