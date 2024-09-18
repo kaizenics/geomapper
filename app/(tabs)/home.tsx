@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, ScrollView, Text, Image, RefreshControl } from "react-native";
+import { SafeAreaView, View, ScrollView, Text, Image, RefreshControl, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import CustomLineChart from "@/components/DailyWaveChart";
+import * as Location from 'expo-location';
+import { LocationObject } from 'expo-location';
+import DailyWaveHeight from "@/components/DailyWaveHeight";
+import DailyWaveDirection from "@/components/DailyWaveDirection";
+import DailyWavePeriod from "@/components/DailyWavePeriod";
 import icons from "@/constants/icons";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const Home = () => {
   const [dailyWaveHeights, setDailyWaveHeights] = useState<number[]>([]);
+  const [dailyWaveDirections, setDailyWaveDirections] = useState<number[]>([]);
+  const [dailyWavePeriods, setDailyWavePeriods] = useState<number[]>([]);
   const [dailyLabels, setDailyLabels] = useState<string[]>([]);
   const [temperature, setTemperature] = useState<number | null>(null);
   const [windSpeed, setWindSpeed] = useState<number | null>(null);
@@ -20,9 +26,10 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [firstName, setFirstName] = useState<string | null>(null);
 
-   // Firebase Auth & Firestore
+  const [location, setLocation] = useState<LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-   const auth = getAuth();
+  const auth = getAuth();
   const db = getFirestore();
 
   const getUserData = async () => {
@@ -37,13 +44,39 @@ const Home = () => {
     }
   };
 
-  // Weather API Data Fetch
+  // Fetch user's location
+  const getLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      setErrorMsg('Permission to access location was denied');
+      Alert.alert("Permission denied", "Location permission is required to fetch the weather data.");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    return location;
+  };
+
+  // Fetch weather data using the user's location
   const getWeatherData = async () => {
     try {
+      const location = await getLocation();
+      if (!location) return;
+
+      const { latitude, longitude } = location.coords;
+
+      // Weather API
       const weatherResponse = await fetch(
-        "https://api.open-meteo.com/v1/forecast?latitude=7.0731&longitude=125.6128&current=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,relative_humidity_2m&daily=weather_code,temperature_2m_max,wind_speed_10m_max,wind_direction_10m_dominant"
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,relative_humidity_2m&daily=weather_code,temperature_2m_max,wind_speed_10m_max,wind_direction_10m_dominant`
       );
       const weatherData = await weatherResponse.json();
+
+      // Marine Forecast API
+      const marineResponse = await fetch(
+        `https://marine-api.open-meteo.com/v1/marine?latitude=${latitude}&longitude=${longitude}&hourly=wave_height&daily=wave_height_max,wave_direction_dominant,wave_period_max`
+      );
+      const marineData = await marineResponse.json();
 
       const {
         temperature_2m,
@@ -51,7 +84,10 @@ const Home = () => {
         wind_direction_10m,
         weather_code,
       } = weatherData.current;
-      const heights = weatherData.daily.temperature_2m_max;
+
+      const heights = marineData.daily.wave_height_max;
+      const directions = marineData.daily.wave_direction_dominant;
+      const periods = marineData.daily.wave_period_max;
       const times = weatherData.daily.time;
       const temperatures = weatherData.daily.temperature_2m_max;
       const dailyWeatherCodes = weatherData.daily.weather_code;
@@ -59,11 +95,13 @@ const Home = () => {
       const dailyWindDirections =
         weatherData.daily.wind_direction_10m_dominant || [];
 
-      setTemperature(temperature_2m);
+       setTemperature(temperature_2m);
       setWindSpeed(wind_speed_10m);
       setWindDirection(wind_direction_10m);
       setWeatherCodes(dailyWeatherCodes);
       setDailyWaveHeights(heights);
+      setDailyWaveDirections(directions);
+      setDailyWavePeriods(periods);
       setDailyLabels(times);
       setDailyTemperatures(temperatures);
       setDailyWindSpeeds(dailyWindSpeeds.slice(0, 4));
@@ -302,14 +340,44 @@ const Home = () => {
 
           {/* Wave Height Chart */}
           <View className="mt-6">
-            <Text className="text-black text-lg font-semibold">
-              Wave Heights (Davao City)
+            <Text className="font-pbold text-black text-lg font-semibold">
+              Wave Heights
             </Text>
             {loading ? (
               <Text>Loading...</Text>
             ) : (
-              <CustomLineChart
+              <DailyWaveHeight
                 dailyWaveHeights={dailyWaveHeights}
+                dailyLabels={nextDays}
+              />
+            )}
+          </View>
+
+          {/* Wave Directions Chart */}
+          <View>
+            <Text className="font-pbold text-black text-lg font-semibold">
+              Wave Directions
+            </Text>
+            {loading ? (
+              <Text>Loading...</Text>
+            ) : (
+              <DailyWaveDirection
+                dailyWaveDirections={dailyWaveDirections}
+                dailyLabels={nextDays}
+              />
+            )}
+          </View>
+
+          {/* Wave Periods Chart */}
+          <View>
+            <Text className="font-pbold text-black text-lg font-semibold">
+              Wave Periods
+            </Text>
+            {loading ? (
+              <Text>Loading...</Text>
+            ) : (
+              <DailyWavePeriod
+                dailyWavePeriods={dailyWavePeriods}
                 dailyLabels={nextDays}
               />
             )}
