@@ -3,18 +3,18 @@ import { SafeAreaView, View, ScrollView, Text, Image, RefreshControl, Alert } fr
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from 'expo-location';
 import { LocationObject } from 'expo-location';
-import DailyWaveHeight from "@/components/DailyWaveHeight";
-import DailyWaveDirection from "@/components/DailyWaveDirection";
-import DailyWavePeriod from "@/components/DailyWavePeriod";
+import HourlyWaveHeight from "@/components/HourlyWaveHeight";
+import HourlyWaveDirection from "@/components/HourlyWaveDirection";
+import HourlyWavePeriod from "@/components/HourlyWavePeriod";
 import icons from "@/constants/icons";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const Home = () => {
-  const [dailyWaveHeights, setDailyWaveHeights] = useState<number[]>([]);
-  const [dailyWaveDirections, setDailyWaveDirections] = useState<number[]>([]);
-  const [dailyWavePeriods, setDailyWavePeriods] = useState<number[]>([]);
-  const [dailyLabels, setDailyLabels] = useState<string[]>([]);
+  const [hourlyWaveHeights, setHourlyWaveHeights] = useState<number[]>([]);
+  const [hourlyWaveDirections, setHourlyWaveDirections] = useState<number[]>([]);
+  const [hourlyWavePeriods, setHourlyWavePeriods] = useState<number[]>([]);
+  const [hourlyLabels, setHourlyLabels] = useState<string[]>([]);
   const [temperature, setTemperature] = useState<number | null>(null);
   const [windSpeed, setWindSpeed] = useState<number | null>(null);
   const [windDirection, setWindDirection] = useState<number | null>(null);
@@ -74,9 +74,12 @@ const Home = () => {
 
       // Marine Forecast API
       const marineResponse = await fetch(
-        `https://marine-api.open-meteo.com/v1/marine?latitude=${latitude}&longitude=${longitude}&hourly=wave_height&daily=wave_height_max,wave_direction_dominant,wave_period_max`
+        `https://marine-api.open-meteo.com/v1/marine?latitude=${latitude}&longitude=${longitude}&hourly=wave_height,wave_direction,wave_period&daily=&timezone=Asia%2FSingapore`
       );
       const marineData = await marineResponse.json();
+  
+      console.log("Weather Data:", weatherData);
+      console.log("Marine Data:", marineData);
 
       const {
         temperature_2m,
@@ -85,24 +88,25 @@ const Home = () => {
         weather_code,
       } = weatherData.current;
 
-      const heights = marineData.daily.wave_height_max;
-      const directions = marineData.daily.wave_direction_dominant;
-      const periods = marineData.daily.wave_period_max;
-      const times = weatherData.daily.time;
+      const heights = marineData.hourly.wave_height;
+      const directions = marineData.hourly.wave_direction;
+      const periods = marineData.hourly.wave_period;
+      const times = marineData.hourly.time;
       const temperatures = weatherData.daily.temperature_2m_max;
       const dailyWeatherCodes = weatherData.daily.weather_code;
       const dailyWindSpeeds = weatherData.daily.wind_speed_10m_max || [];
       const dailyWindDirections =
         weatherData.daily.wind_direction_10m_dominant || [];
 
+        
        setTemperature(temperature_2m);
       setWindSpeed(wind_speed_10m);
       setWindDirection(wind_direction_10m);
       setWeatherCodes(dailyWeatherCodes);
-      setDailyWaveHeights(heights);
-      setDailyWaveDirections(directions);
-      setDailyWavePeriods(periods);
-      setDailyLabels(times);
+      setHourlyWaveHeights(heights);
+      setHourlyWaveDirections(directions);
+      setHourlyWavePeriods(periods);
+      setHourlyLabels(getNextHours());
       setDailyTemperatures(temperatures);
       setDailyWindSpeeds(dailyWindSpeeds.slice(0, 4));
       setDailyWindDirections(dailyWindDirections.slice(0, 4));
@@ -205,6 +209,30 @@ const Home = () => {
   };
 
   const nextDays = getNextDays();
+
+  const getNextHours = () => {
+  const currentHour = new Date();
+
+
+  const options: Intl.DateTimeFormatOptions = { 
+    hour: 'numeric', 
+    minute: '2-digit',
+    hour12: false, 
+    timeZone: 'Asia/Singapore' 
+  };
+
+  const formatter = new Intl.DateTimeFormat('en-US', options);
+
+  const hours = Array.from({ length: 6 }, (_, i) => {
+    const hour = new Date(currentHour.setMinutes(0, 0, 0)); 
+    hour.setHours(hour.getHours() - (5 - i)); 
+    return formatter.format(hour);
+  });
+
+  return hours;
+};
+
+  const nextHours = getNextHours();
 
   const calculateRotation = (direction: number) => {
     // Rotation angle calculation based on wind direction
@@ -346,9 +374,9 @@ const Home = () => {
             {loading ? (
               <Text>Loading...</Text>
             ) : (
-              <DailyWaveHeight
-                dailyWaveHeights={dailyWaveHeights}
-                dailyLabels={nextDays}
+              <HourlyWaveHeight
+                hourlyWaveHeights={hourlyWaveHeights.slice(0, 6)}
+                hourlyLabels={nextHours}
               />
             )}
           </View>
@@ -361,9 +389,9 @@ const Home = () => {
             {loading ? (
               <Text>Loading...</Text>
             ) : (
-              <DailyWaveDirection
-                dailyWaveDirections={dailyWaveDirections}
-                dailyLabels={nextDays}
+              <HourlyWaveDirection
+                hourlyWaveDirections={hourlyWaveDirections.slice(0, 6)}
+                hourlyLabels={nextHours}
               />
             )}
           </View>
@@ -376,9 +404,9 @@ const Home = () => {
             {loading ? (
               <Text>Loading...</Text>
             ) : (
-              <DailyWavePeriod
-                dailyWavePeriods={dailyWavePeriods}
-                dailyLabels={nextDays}
+              <HourlyWavePeriod
+                hourlyWavePeriods={hourlyWavePeriods.slice(0, 6)}
+                hourlyLabels={nextHours}
               />
             )}
           </View>
