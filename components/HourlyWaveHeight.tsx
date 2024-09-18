@@ -2,7 +2,7 @@ import React from 'react';
 import { Dimensions, Text, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-const DailyWaveDirection = ({ dailyLabels, dailyWaveDirections }: { dailyLabels: string[], dailyWaveDirections: number[] }) => {
+const HourlyWaveHeight = ({ hourlyLabels, hourlyWaveHeights }: { hourlyLabels: string[], hourlyWaveHeights: number[] }) => {
   const renderDotContent = ({ x, y, index }: { x: number, y: number, index: number }) => {
     return (
       <View
@@ -14,7 +14,7 @@ const DailyWaveDirection = ({ dailyLabels, dailyWaveDirections }: { dailyLabels:
         }}
       >
         <Text style={{ fontSize: 10, color: 'white' }}>
-          {dailyWaveDirections[index]}
+          {hourlyWaveHeights[index]}
         </Text>
       </View>
     );
@@ -23,34 +23,35 @@ const DailyWaveDirection = ({ dailyLabels, dailyWaveDirections }: { dailyLabels:
   return (
     <LineChart
       data={{
-        labels: dailyLabels.length > 0 ? dailyLabels : ['Fetching Data...'],
+        labels: hourlyLabels.length > 0 ? hourlyLabels : ['Fetching Data...'],
         datasets: [
           {
-            data: dailyWaveDirections.length > 0 ? dailyWaveDirections : [0],
+            data: hourlyWaveHeights.length > 0 ? hourlyWaveHeights : [0],
           },
         ],
       }}
       width={Dimensions.get('window').width - 32}
       height={200}
       yAxisLabel=""
-      yAxisSuffix="°"
+      yAxisSuffix="m"
       yAxisInterval={1}
       
       chartConfig={{
         backgroundColor: '#4a90e2',
         backgroundGradientFrom: '#4a90e2',
         backgroundGradientTo: '#0e4483',
-        decimalPlaces: 0,
+        decimalPlaces: 2,
         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         style: {
-          borderRadius: 16,
+          borderRadius: 16, 
         },
         propsForDots: {
           r: '5',
           strokeWidth: '2',
           stroke: '#ffa726',
         },
+        
       }}
       bezier
       style={{
@@ -63,4 +64,4 @@ const DailyWaveDirection = ({ dailyLabels, dailyWaveDirections }: { dailyLabels:
   );
 };
 
-export default DailyWaveDirection;
+export default HourlyWaveHeight;

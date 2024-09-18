@@ -2,7 +2,7 @@ import React from 'react';
 import { Dimensions, Text, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-const CustomLineChart = ({ dailyLabels, dailyWaveHeights }: { dailyLabels: string[], dailyWaveHeights: number[] }) => {
+const HourlyWavePeriod = ({ hourlyLabels, hourlyWavePeriods }: { hourlyLabels: string[], hourlyWavePeriods: number[] }) => {
   const renderDotContent = ({ x, y, index }: { x: number, y: number, index: number }) => {
     return (
       <View
@@ -14,7 +14,7 @@ const CustomLineChart = ({ dailyLabels, dailyWaveHeights }: { dailyLabels: strin
         }}
       >
         <Text style={{ fontSize: 10, color: 'white' }}>
-          {dailyWaveHeights[index]}
+          {hourlyWavePeriods[index]}
         </Text>
       </View>
     );
@@ -23,35 +23,34 @@ const CustomLineChart = ({ dailyLabels, dailyWaveHeights }: { dailyLabels: strin
   return (
     <LineChart
       data={{
-        labels: dailyLabels.length > 0 ? dailyLabels : ['Fetching Data...'],
+        labels: hourlyLabels.length > 0 ? hourlyLabels : ['Fetching Data...'],
         datasets: [
           {
-            data: dailyWaveHeights.length > 0 ? dailyWaveHeights : [0],
+            data: hourlyWavePeriods.length > 0 ? hourlyWavePeriods : [0],
           },
         ],
       }}
       width={Dimensions.get('window').width - 32}
       height={200}
       yAxisLabel=""
-      yAxisSuffix="m"
+      yAxisSuffix="s"
       yAxisInterval={1}
       
       chartConfig={{
         backgroundColor: '#4a90e2',
         backgroundGradientFrom: '#4a90e2',
         backgroundGradientTo: '#0e4483',
-        decimalPlaces: 2,
+        decimalPlaces: 1,
         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         style: {
-          borderRadius: 16, 
+          borderRadius: 16,
         },
         propsForDots: {
           r: '5',
           strokeWidth: '2',
           stroke: '#ffa726',
         },
-        
       }}
       bezier
       style={{
@@ -64,4 +63,4 @@ const CustomLineChart = ({ dailyLabels, dailyWaveHeights }: { dailyLabels: strin
   );
 };
 
-export default CustomLineChart;
+export default HourlyWavePeriod;
