@@ -2,7 +2,7 @@ import React from 'react';
 import { Dimensions, Text, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-const DailyWavePeriod = ({ dailyLabels, dailyWavePeriods }: { dailyLabels: string[], dailyWavePeriods: number[] }) => {
+const HourlyWaveDirection = ({ hourlyLabels, hourlyWaveDirections }: { hourlyLabels: string[], hourlyWaveDirections: number[] }) => {
   const renderDotContent = ({ x, y, index }: { x: number, y: number, index: number }) => {
     return (
       <View
@@ -14,7 +14,7 @@ const DailyWavePeriod = ({ dailyLabels, dailyWavePeriods }: { dailyLabels: strin
         }}
       >
         <Text style={{ fontSize: 10, color: 'white' }}>
-          {dailyWavePeriods[index]}
+          {hourlyWaveDirections[index]}
         </Text>
       </View>
     );
@@ -23,24 +23,24 @@ const DailyWavePeriod = ({ dailyLabels, dailyWavePeriods }: { dailyLabels: strin
   return (
     <LineChart
       data={{
-        labels: dailyLabels.length > 0 ? dailyLabels : ['Fetching Data...'],
+        labels: hourlyLabels.length > 0 ? hourlyLabels : ['Fetching Data...'],
         datasets: [
           {
-            data: dailyWavePeriods.length > 0 ? dailyWavePeriods : [0],
+            data: hourlyWaveDirections.length > 0 ? hourlyWaveDirections : [0],
           },
         ],
       }}
       width={Dimensions.get('window').width - 32}
       height={200}
       yAxisLabel=""
-      yAxisSuffix="s"
+      yAxisSuffix="°"
       yAxisInterval={1}
       
       chartConfig={{
         backgroundColor: '#4a90e2',
         backgroundGradientFrom: '#4a90e2',
         backgroundGradientTo: '#0e4483',
-        decimalPlaces: 1,
+        decimalPlaces: 0,
         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
         style: {
@@ -63,4 +63,4 @@ const DailyWavePeriod = ({ dailyLabels, dailyWavePeriods }: { dailyLabels: strin
   );
 };
 
-export default DailyWavePeriod;
+export default HourlyWaveDirection;
