@@ -1,50 +1,57 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![GeoMapper](https://github.com/user-attachments/assets/1a629743-5a3f-4ff0-b256-35b68ed8c43f)
+======
 
-## Get started
+[![Build Status](https://img.shields.io/github/forks/kaizenics/geomapper.svg?style=flat-square)](https://github.com/kaizenics/geomapper)
+[![Build Status](https://img.shields.io/github/stars/kaizenics/geomapper.svg?style=flat-square)](https://github.com/kaizenics/geomapper)
+[![License](https://img.shields.io/github/license/kaizenics/geomapper.svg?style=flat-square)](https://github.com/kaizenics/geomapper)
 
-1. Install dependencies
+> [!NOTE]
+> Our capstone project is still in progress in development. This is still not working well and we are addressing some challenges. You can also watch the Admin Panel side of our Project at [kaizenics/geomapper-admin](https://github.com/kaizenics/geomapper-admin)
 
-   ```bash
-   npm install
-   ```
+## GitHub Forking and Pull Requests
 
-2. Start the app
+### Forking a Repository
+1. Go to the repository you want to contribute to on GitHub.
+2. Click on the "Fork" button at the top right corner of the page.
 
-   ```bash
-    npx expo start
-   ```
+### Cloning the Forked Repository
+1. Clone the forked repository to your local machine using:
+   ```sh
+   git clone https://github.com/kaizenics/geomapper.git
 
-In the output, you'll find options to open the app in a
+2. Navigate into the repository's directory:
+   ```sh
+   cd geomapper
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Creating a New Branch
+1. Create a new branch to make your changes
+   ```sh
+   git checkout -b branch_name
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Making Changes
+1. Make the necessary changes in your code.
+2. Test your changes to ensure they work as expected.
 
-## Get a fresh project
+### Committing and Pushing Changes
+1. Add your changes:
+   ```sh
+   git add .
 
-When you're ready, run:
+2. Commit your changes:
+   ```sh
+   git commit -m "feat: Description of changes"
 
-```bash
-npm run reset-project
-```
+3. Push your changes to the forked repository:
+   ```sh
+   git push origin branch-name
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Creating a Pull Request
+1. Go to your forked repository on GitHub.
+2. Click on the "Compare & pull request" button.
+3. Provide a clear title and description for your pull request.
+4. Submit the pull request.
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
